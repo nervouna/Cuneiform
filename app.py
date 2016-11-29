@@ -11,6 +11,10 @@ from leancloud import Engine
 from leancloud import LeanEngineError
 
 from models import Post
+from models import get_post_list
+from models import has_more_posts
+from models import create_new_post
+from models import get_single_post
 
 
 app = Flask(__name__)
@@ -19,15 +23,22 @@ app = Flask(__name__)
 engine = Engine(app)
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def index(post_per_page=10):
+    try:
+        current_page = int(request.args['page'])
+    except KeyError:
+        current_page = 1
+    posts, post_count = get_post_list(post_per_page, current_page)
+    more = has_more_posts(current_page, post_count, post_per_page)
+    return render_template('index.html', posts=posts, more=more, page=current_page)
 
 @app.route('/', methods=['POST'])
 def new_post():
-    post_title = request.form['title']
-    post_content = request.form['content']
-    post = Post()
-    post.set('title', post_title)
-    post.set('content', post_content)
-    post.save()
-    return redirect(url_for('index'))
+    post_title, post_content = request.form['title'], request.form['content']
+    create_new_post(title=post_title, content=post_content)
+    return redirect(url_for('index', page=1))
+
+@app.route('/post/<post_id>')
+def single_post(post_id):
+    post = get_single_post(post_id)
+    return render_template('single-post.html', post=post)

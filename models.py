@@ -12,19 +12,31 @@ class Attachment(File):
 class User(Object):
     pass
 
-def get_post_list(limit=10, page=1):
+def get_post_list(post_per_page=10, current_page=1):
     '''Return the post list.
 
     Keyword arguments:
-    limit -- posts per page (default 10)
-    page -- page number (default 1)
+    post_per_page -- posts per page (default 10)
+    current_page -- page number (default 1)
     '''
     post_query = Query(Post)
-    post_query.limit(limit)
-    if page > 1: post_query.skip((page - 1) * limit)
+    post_query.limit(post_per_page)
     post_query.add_descending('createdAt')
-    post_list = post_query.find()
-    return post_list
+    if current_page > 1: post_query.skip((current_page - 1) * post_per_page)
+    try:
+        post_list = post_query.find()
+        post_count = post_query.count()
+    except LeanCloudError as e:
+        if e.code == 101:
+            post_count = 0
+            post_list = []
+        else:
+            raise e
+    return post_list, post_count
+
+def has_more_posts(current_page, post_count, post_per_page):
+    '''Return True if there are posts to show in the next page.'''
+    return post_count > post_per_page * current_page
 
 def get_single_post(post_id):
     '''Return a single post.

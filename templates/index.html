@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Cuneiform</title>
+  </head>
+  <body>
+    <div class="form">
+      <form class="" action="{{ url_for('new_post') }}" method="post">
+        <input type="text" name="title" value="">
+        <textarea name="content" rows="8" cols="40"></textarea>
+        <input type="submit" name="" value="Submit">
+      </form>
+    </div>
+    <div class="posts">
+      {% for post in posts %}
+      <h3><a href="{{ url_for('single_post', post_id=post.id) }}">{{ post.get('title') }}</a></h3>
+      {% endfor %}
+    </div>
+    {% if page > 1 %}
+    <p><a href="{{ url_for('index', page=page-1) }}">Prev</a></p>
+    {% endif %}
+    {% if more %}
+    <p><a href="{{ url_for('index', page=page+1) }}">Next</a></p>
+    {% endif %}
+  </body>
+</html>
