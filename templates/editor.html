@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}Editor - Cuneiform{% endblock %}
+{% block body %}
+<div class="form">
+  <form class="" action="{{ url_for('new_post') }}" method="post">
+    <label>Post Title</label>
+    <br>
+    <input type="text" name="title" value="">
+    <br>
+    <label>Post Content</label>
+    <br>
+    <textarea name="content" rows="8" cols="40"></textarea>
+    <br>
+    <input type="submit" name="" value="Submit">
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <div class="nav">
+      <p><a href="{{ url_for('index') }}">All Posts</a> | <a href="{{ url_for('new_post_editor') }}">New Post</a></p>
+    </div>
+    {% block body %}{% endblock %}
+  </body>
+</html>
