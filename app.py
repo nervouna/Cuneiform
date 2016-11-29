@@ -39,8 +39,8 @@ def new_post_editor():
 @app.route('/new_post', methods=['POST'])
 def new_post():
     post_title, post_content = request.form['title'], request.form['content']
-    create_new_post(title=post_title, content=post_content)
-    return redirect(url_for('index', page=1))
+    post_id = create_new_post(title=post_title, content=post_content)
+    return redirect(url_for('single_post', post_id=post_id))
 
 @app.route('/post/<post_id>')
 def single_post(post_id):
