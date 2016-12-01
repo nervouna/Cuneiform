@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Posts - Cuneiform{% endblock %}
 {% block body %}
+{% if posts %}
   <div class="posts">
     <h1>All Posts</h1>
     {% for post in posts %}
@@ -13,4 +14,9 @@
   {% if more %}
   <p><a href="{{ url_for('index', page=page+1) }}">Next</a></p>
   {% endif %}
+{% else %}
+  <div class="no-posts">
+    <p>No posts yet. Why not <a href="{{ url_for('new_post_editor') }}">create</a> some?</p>
+  </div>
+{% endif %}
 {% endblock %}
