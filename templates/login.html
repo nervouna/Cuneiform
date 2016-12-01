@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Login{% endblock %}
 {% block body %}
-<form class="" action="{{ url_for('login') }}" method="post">
+<form class="" action="{{ url_for('login', next=url_for('new_post_editor')) }}" method="post">
   <input type="text" name="username" value="">
   <input type="password" name="password" value="">
   <input type="submit" name="" value="submit">

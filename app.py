@@ -62,7 +62,11 @@ def login():
     username, password = request.form['username'], request.form['password']
     user = User()
     user.login(username, password)
-    return redirect(url_for('index'))
+    try:
+        next = request.args['next']
+    except KeyError:
+        next = "index"
+    return redirect(next)
 
 @app.route('/user/logout')
 def logout():
