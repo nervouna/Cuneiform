@@ -41,7 +41,7 @@ def has_more_posts(current_page, post_count, post_per_page):
 def get_single_post(post_id):
     '''Return a single post.
 
-    Argument:
+    Arguments:
     post_id -- LeanCloud Object ID (default None)
     '''
     post_query = Query(Post)
@@ -51,10 +51,11 @@ def get_single_post(post_id):
 def create_new_post(title, content):
     '''Create a new post, return ``post_id`` for the created post.
 
-    Argument:
+    Arguments:
     title -- title for the new post
     content -- content for the new post, multi-line text
     '''
+    assert title or content
     new_post = Post()
     new_post.set('title', title)
     new_post.set('content', content)

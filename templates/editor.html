@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Editor - Cuneiform{% endblock %}
 {% block body %}
+<p>Logged in. <a href="{{ url_for('logout') }}">Log out</a></p>
 <div class="form">
   <form class="" action="{{ url_for('new_post') }}" method="post">
     <label>Post Title</label>

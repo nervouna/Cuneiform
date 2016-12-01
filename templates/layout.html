@@ -8,6 +8,13 @@
     <div class="nav">
       <p><a href="{{ url_for('index') }}">All Posts</a> | <a href="{{ url_for('new_post_editor') }}">New Post</a></p>
     </div>
+    <div class="messages">
+      {% with messages = get_flashed_messages(with_categories=True) %}
+      {% for message, category in messages %}
+      {{ category }} : {{ message }}
+      {% endfor %}
+      {% endwith %}
+    </div>
     {% block body %}{% endblock %}
   </body>
 </html>

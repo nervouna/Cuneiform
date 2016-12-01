@@ -22,6 +22,8 @@ except KeyError:
     # And boy it's dangerous on production servers, take care.
     SECRET_KEY = 'dev'
 
+app.secret_key = SECRET_KEY
+
 leancloud.init(APP_ID, app_key=APP_KEY, master_key=MASTER_KEY)
 # Using master key is like granting root access in Linux. Use it wisely.
 leancloud.use_master_key(False)
