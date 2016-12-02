@@ -3,6 +3,8 @@ from leancloud import File
 from leancloud import Query
 from leancloud import LeanCloudError
 
+from markdown import markdown
+
 class Post(Object):
     pass
 
@@ -59,6 +61,7 @@ def create_new_post(title, content):
     new_post = Post()
     new_post.set('title', title)
     new_post.set('content', content)
+    new_post.set('markedContent', markdown(content))
     new_post.save()
     post_id = new_post.id
     return post_id

@@ -52,7 +52,6 @@ def new_post():
 @app.route('/post/<post_id>')
 def single_post(post_id):
     post = get_single_post(post_id)
-    post.set('content', markdown(post.get('content')))
     return render_template('single-post.html', post=post)
 
 @app.route('/user/login')
