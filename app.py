@@ -7,6 +7,8 @@ from flask import redirect
 from flask import url_for
 from flask import flash
 
+from markdown import markdown
+
 # Required for LeanEngine
 from leancloud import Engine
 from leancloud import LeanEngineError
@@ -50,6 +52,7 @@ def new_post():
 @app.route('/post/<post_id>')
 def single_post(post_id):
     post = get_single_post(post_id)
+    post.set('content', markdown(post.get('content')))
     return render_template('single-post.html', post=post)
 
 @app.route('/user/login')
