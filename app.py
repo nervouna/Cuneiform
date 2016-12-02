@@ -11,7 +11,6 @@ from flask import flash
 from leancloud import Engine
 from leancloud import LeanEngineError
 
-from models import Post
 from models import User
 from models import get_post_list
 from models import has_more_posts
