@@ -82,6 +82,7 @@ def login():
 
 @app.route('/user/logout')
 def logout():
-    user = User()
+    user = User.get_current()
     user.logout()
+    print(type(user.get_current()))
     return redirect(url_for('index'))
