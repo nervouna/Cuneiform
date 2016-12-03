@@ -3,10 +3,14 @@
 {% block body %}
 <p>Logged in. <a href="{{ url_for('logout') }}">Log out</a></p>
 <div class="form">
-  <form class="" action="{{ url_for('new_post') }}" method="post">
+  <form class="" enctype="multipart/form-data" action="{{ url_for('new_post') }}" method="post">
     <label>Post Title</label>
     <br>
     <input type="text" name="title" value="">
+    <br>
+    <label>Featured Image</label>
+    <br>
+    <input type="file" name="featuredImage" value="">
     <br>
     <label>Post Content</label>
     <br>

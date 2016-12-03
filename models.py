@@ -33,6 +33,15 @@ class Post(Object):
     def markedContent(self, markedContent):
         return self.set('markedContent', markedContent)
 
+    @property
+    def featuredImage(self):
+        return self.get('featuredImage')
+
+    @featuredImage.setter
+    def featuredImage(self, featuredImage):
+        assert isinstance(featuredImage, Attachment)
+        return self.set('featuredImage', featuredImage)
+
 class User(Object):
     pass
 

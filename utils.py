@@ -9,6 +9,14 @@ from models import Post
 from models import User
 from models import Attachment
 
+all = [
+'get_post_list',
+'has_more_posts',
+'get_single_post',
+'create_new_post',
+'allowed_file',
+]
+
 
 def get_post_list(post_per_page=10, current_page=1):
     '''Return the post list.
@@ -46,7 +54,7 @@ def get_single_post(post_id):
     single_post = post_query.get(post_id)
     return single_post
 
-def create_new_post(title, content):
+def create_new_post(title, content, featuredImage):
     '''Create a new post, return ``post_id`` for the created post.
 
     Arguments:
@@ -57,5 +65,11 @@ def create_new_post(title, content):
     new_post.title = title
     new_post.content = content
     new_post.markedContent = markdown(content)
+    if featuredImage is not None:
+        new_post.featuredImage = featuredImage
     new_post.save()
     return new_post
+
+def allowed_file(filename):
+    allowed_ext = ['jpg', 'jpeg', 'png', 'svg', 'gif', 'bmp']
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_ext

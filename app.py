@@ -14,10 +14,8 @@ from leancloud import Engine
 from leancloud import LeanEngineError
 
 from models import User
-from utils import get_post_list
-from utils import has_more_posts
-from utils import create_new_post
-from utils import get_single_post
+from models import Attachment
+from utils import all
 
 
 app = Flask(__name__)
@@ -46,7 +44,12 @@ def post_form():
 @app.route('/new_post', methods=['POST'])
 def new_post():
     title, content = request.form['title'], request.form['content']
-    new_post = create_new_post(title=title, content=content)
+    f = request.files['featuredImage']
+    if not allowed_file(f.filename):
+        flash('error', 'Upload a proper image.')
+        return redirect(url_for('post_form'))
+    featuredImage = Attachment(f.filename, data=f.stream)
+    new_post = create_new_post(title, content, featuredImage)
     return redirect(url_for('show_post', post_id=new_post.id))
 
 @app.route('/post/<post_id>')
