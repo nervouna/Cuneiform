@@ -75,7 +75,6 @@ def create_new_post(title, content, featuredImage):
     return new_post
 
 
-def allowed_file(filename):
+def allowed_file(ext):
     allowed_ext = ['jpg', 'jpeg', 'png', 'svg', 'gif', 'bmp']
-    filename = filename.lower()
-    return '.' in filename and filename.rsplit('.', 1)[1] in allowed_ext
+    return ext.lower() in allowed_ext
