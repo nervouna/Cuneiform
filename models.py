@@ -1,67 +1,40 @@
 from leancloud import Object
 from leancloud import File
-from leancloud import Query
 from leancloud import LeanCloudError
 
-from markdown import markdown
+from datetime import datetime
+
 
 class Post(Object):
-    pass
 
-class Attachment(File):
-    pass
+    @property
+    def title(self):
+        return self.get('title')
+
+    @title.setter
+    def title(self, title):
+        if title == '' or title is None:
+            title = datetime.now().strftime('Post On %Y-%m-%d %H:%M')
+        return self.set('title', title)
+
+    @property
+    def content(self):
+        return self.get('content')
+
+    @content.setter
+    def content(self, content):
+        return self.set('content', content)
+
+    @property
+    def markedContent(self):
+        return self.get('markedContent')
+
+    @markedContent.setter
+    def markedContent(self, markedContent):
+        return self.set('markedContent', markedContent)
 
 class User(Object):
     pass
 
-def get_post_list(post_per_page=10, current_page=1):
-    '''Return the post list.
-
-    Keyword arguments:
-    post_per_page -- posts per page (default 10)
-    current_page -- page number (default 1)
-    '''
-    post_query = Query(Post)
-    post_query.limit(post_per_page)
-    post_query.add_descending('createdAt')
-    if current_page > 1: post_query.skip((current_page - 1) * post_per_page)
-    try:
-        post_list = post_query.find()
-        post_count = post_query.count()
-    except LeanCloudError as e:
-        if e.code == 101:
-            post_count = 0
-            post_list = []
-        else:
-            raise e
-    return post_list, post_count
-
-def has_more_posts(current_page, post_count, post_per_page):
-    '''Return True if there are posts to show in the next page.'''
-    return post_count > post_per_page * current_page
-
-def get_single_post(post_id):
-    '''Return a single post.
-
-    Arguments:
-    post_id -- LeanCloud Object ID (default None)
-    '''
-    post_query = Query(Post)
-    single_post = post_query.get(post_id)
-    return single_post
-
-def create_new_post(title, content):
-    '''Create a new post, return ``post_id`` for the created post.
-
-    Arguments:
-    title -- title for the new post
-    content -- content for the new post, multi-line text
-    '''
-    assert title or content
-    new_post = Post()
-    new_post.set('title', title)
-    new_post.set('content', content)
-    new_post.set('markedContent', markdown(content))
-    new_post.save()
-    post_id = new_post.id
-    return post_id
+class Attachment(File):
+    pass

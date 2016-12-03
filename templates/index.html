@@ -5,7 +5,7 @@
   <div class="posts">
     <h1>All Posts</h1>
     {% for post in posts %}
-    <h3><a href="{{ url_for('single_post', post_id=post.id) }}">{{ post.get('title') }}</a></h3>
+    <h3><a href="{{ url_for('show_post', post_id=post.id) }}">{{ post.get('title') }}</a></h3>
     {% endfor %}
   </div>
   {% if page > 1 %}
@@ -16,7 +16,7 @@
   {% endif %}
 {% else %}
   <div class="no-posts">
-    <p>No posts yet. Why not <a href="{{ url_for('new_post_editor') }}">create</a> some?</p>
+    <p>No posts yet. Why not <a href="{{ url_for('post_form') }}">create</a> some?</p>
   </div>
 {% endif %}
 {% endblock %}

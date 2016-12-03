@@ -6,7 +6,7 @@
   </head>
   <body>
     <div class="nav">
-      <p><a href="{{ url_for('index') }}">All Posts</a> | <a href="{{ url_for('new_post_editor') }}">New Post</a></p>
+      <p><a href="{{ url_for('index') }}">All Posts</a> | <a href="{{ url_for('post_form') }}">New Post</a></p>
     </div>
     <div class="messages">
       {% with messages = get_flashed_messages(with_categories=True) %}
