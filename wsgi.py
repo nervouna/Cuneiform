@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import os
+import leancloud
+from app import app
+from app import engine
+
 from gevent import monkey
 monkey.patch_all()
 
-import os
-
-import leancloud
-
-from app import app
-from app import engine
 
 APP_ID = os.environ['LEANCLOUD_APP_ID']
 APP_KEY = os.environ['LEANCLOUD_APP_KEY']
@@ -18,7 +17,7 @@ try:
     # Make sure you have configured your SECRET_KEY in LeanCloud console.
     SECRET_KEY = os.environ['FLASK_SECRET_KEY']
 except KeyError:
-    # If the app failed to get a SECRET_KEY from os.environ, use dev key instead
+    # If the app fails to get a SECRET_KEY from os.environ, use dev key instead
     # And boy it's dangerous on production servers, take care.
     SECRET_KEY = 'dev'
 

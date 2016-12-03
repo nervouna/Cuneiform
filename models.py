@@ -42,8 +42,10 @@ class Post(Object):
         assert isinstance(featuredImage, Attachment)
         return self.set('featuredImage', featuredImage)
 
+
 class User(Object):
     pass
+
 
 class Attachment(File):
     pass

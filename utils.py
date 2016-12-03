@@ -10,11 +10,11 @@ from models import User
 from models import Attachment
 
 all = [
-'get_post_list',
-'has_more_posts',
-'get_single_post',
-'create_new_post',
-'allowed_file',
+    'get_post_list',
+    'has_more_posts',
+    'get_single_post',
+    'create_new_post',
+    'allowed_file',
 ]
 
 
@@ -28,7 +28,8 @@ def get_post_list(post_per_page=10, current_page=1):
     post_query = Query(Post)
     post_query.limit(post_per_page)
     post_query.add_descending('createdAt')
-    if current_page > 1: post_query.skip((current_page - 1) * post_per_page)
+    if current_page > 1:
+        post_query.skip((current_page - 1) * post_per_page)
     try:
         post_list = post_query.find()
         post_count = post_query.count()
@@ -40,9 +41,11 @@ def get_post_list(post_per_page=10, current_page=1):
             raise e
     return post_list, post_count
 
+
 def has_more_posts(current_page, post_count, post_per_page):
     '''Return True if there are posts to show in the next page.'''
     return post_count > post_per_page * current_page
+
 
 def get_single_post(post_id):
     '''Return a single post.
@@ -53,6 +56,7 @@ def get_single_post(post_id):
     post_query = Query(Post)
     single_post = post_query.get(post_id)
     return single_post
+
 
 def create_new_post(title, content, featuredImage):
     '''Create a new post, return ``post_id`` for the created post.
@@ -70,6 +74,8 @@ def create_new_post(title, content, featuredImage):
     new_post.save()
     return new_post
 
+
 def allowed_file(filename):
     allowed_ext = ['jpg', 'jpeg', 'png', 'svg', 'gif', 'bmp']
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_ext
+    filename = filename.lower()
+    return '.' in filename and filename.rsplit('.', 1)[1] in allowed_ext

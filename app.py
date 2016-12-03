@@ -23,6 +23,7 @@ app = Flask(__name__)
 # Required for LeanEngine
 engine = Engine(app)
 
+
 @app.route('/')
 def index(post_per_page=10):
     try:
@@ -31,7 +32,9 @@ def index(post_per_page=10):
         current_page = 1
     posts, post_count = get_post_list(post_per_page, current_page)
     more = has_more_posts(current_page, post_count, post_per_page)
-    return render_template('index.html', posts=posts, more=more, page=current_page)
+    return render_template('index.html',
+                           posts=posts, more=more, page=current_page)
+
 
 @app.route('/new_post')
 def post_form():
@@ -40,6 +43,7 @@ def post_form():
         flash('info', 'You have to login to see the good stuff.')
         return redirect(url_for('login'))
     return render_template('editor.html')
+
 
 @app.route('/new_post', methods=['POST'])
 def new_post():
@@ -52,14 +56,17 @@ def new_post():
     new_post = create_new_post(title, content, featuredImage)
     return redirect(url_for('show_post', post_id=new_post.id))
 
+
 @app.route('/post/<post_id>')
 def show_post(post_id):
     post = get_single_post(post_id)
     return render_template('single-post.html', post=post)
 
+
 @app.route('/user/login')
 def login_form():
     return render_template('login.html')
+
 
 @app.route('/user/login', methods=['POST'])
 def login():
@@ -71,6 +78,7 @@ def login():
     except KeyError:
         next = "index"
     return redirect(next)
+
 
 @app.route('/user/logout')
 def logout():
