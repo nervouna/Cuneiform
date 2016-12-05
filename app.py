@@ -51,7 +51,7 @@ def new_post():
     f = request.files['featuredImage']
     featuredImage = Attachment(f.filename, data=f.stream)
     if not allowed_file(featuredImage.extension):
-        flash('error', 'Upload a proper image.')
+        flash('warning', 'Upload a proper image.')
         return redirect(url_for('post_form'))
     new_post = create_new_post(title, content, featuredImage)
     return redirect(url_for('show_post', post_id=new_post.id))
