@@ -26,9 +26,9 @@ engine = Engine(app)
 
 @app.route('/')
 def index(post_per_page=10):
-    try:
+    if 'page' in request.args.keys():
         current_page = int(request.args['page'])
-    except KeyError:
+    else:
         current_page = 1
     posts, post_count = get_post_list(post_per_page, current_page)
     more = has_more_posts(current_page, post_count, post_per_page)
@@ -78,16 +78,14 @@ def login():
     username, password = request.form['username'], request.form['password']
     user = User()
     user.login(username, password)
-    try:
-        next = request.args['next']
-    except KeyError:
-        next = "index"
-    return redirect(next)
+    if 'next' in request.args.keys():
+        return redirect(request.args.get('next'))
+    else:
+        return redirect('index')
 
 
 @app.route('/user/logout')
 def logout():
     user = User.get_current()
     user.logout()
-    print(type(user.get_current()))
     return redirect(url_for('index'))
