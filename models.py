@@ -42,6 +42,15 @@ class Post(Object):
         assert isinstance(featuredImage, Attachment)
         return self.set('featuredImage', featuredImage)
 
+    @property
+    def author(self):
+        return self.get('author')
+
+    @author.setter
+    def author(self, author):
+        assert isinstance(author, User)
+        return self.set('author', author)
+
 
 class User(Object):
     pass

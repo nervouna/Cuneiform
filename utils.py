@@ -58,7 +58,7 @@ def get_single_post(post_id):
     return single_post
 
 
-def create_new_post(title, content, featuredImage):
+def create_new_post(title, content, author, featuredImage):
     '''Create a new post, return ``post_id`` for the created post.
 
     Arguments:
@@ -69,6 +69,7 @@ def create_new_post(title, content, featuredImage):
     new_post.title = title
     new_post.content = content
     new_post.markedContent = markdown(content)
+    new_post.author = author
     if featuredImage is not None:
         new_post.featuredImage = featuredImage
     new_post.save()

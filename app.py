@@ -41,24 +41,30 @@ def post_form():
     if not current_user:
         flash('info', 'You have to login to see the good stuff.')
         return redirect(url_for('login'))
-    return render_template('editor.html')
+    current_user.fetch()
+    return render_template('editor.html', current_user=current_user)
 
 
 @app.route('/new_post', methods=['POST'])
 def new_post():
+    author = User.get_current()
     title, content = request.form['title'], request.form['content']
     f = request.files['featuredImage']
-    featuredImage = Attachment(f.filename, data=f.stream)
-    if not allowed_file(featuredImage.extension):
+    if f.filename == '':
+        featuredImage = None
+    else:
+        featuredImage = Attachment(f.filename, data=f.stream)
+    if featuredImage and not allowed_file(featuredImage.extension):
         flash('warning', 'Upload a proper image.')
         return redirect(url_for('post_form'))
-    new_post = create_new_post(title, content, featuredImage)
+    new_post = create_new_post(title, content, author, featuredImage)
     return redirect(url_for('show_post', post_id=new_post.id))
 
 
 @app.route('/post/<post_id>')
 def show_post(post_id):
     post = get_single_post(post_id)
+    post.author.fetch()
     return render_template('single-post.html', post=post)
 
 
