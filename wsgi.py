@@ -4,6 +4,7 @@ import os
 import leancloud
 from app import app
 from app import engine
+from leancloud.engine.cookie_session import CookieSessionMiddleware
 
 from gevent import monkey
 monkey.patch_all()
@@ -15,11 +16,11 @@ MASTER_KEY = os.environ['LEANCLOUD_APP_MASTER_KEY']
 PORT = int(os.environ['LEANCLOUD_APP_PORT'])
 try:
     # Make sure you have configured your SECRET_KEY in LeanCloud console.
-    SECRET_KEY = os.environ['FLASK_SECRET_KEY']
+    SECRET_KEY = bytes(os.environ['FLASK_SECRET_KEY'], 'utf-8')
 except KeyError:
     # If the app fails to get a SECRET_KEY from os.environ, use dev key instead
     # And boy it's dangerous on production servers, take care.
-    SECRET_KEY = 'dev'
+    SECRET_KEY = b'dev'
 
 app.secret_key = SECRET_KEY
 
@@ -27,7 +28,7 @@ leancloud.init(APP_ID, app_key=APP_KEY, master_key=MASTER_KEY)
 # Using master key is like granting root access in Linux. Use it wisely.
 leancloud.use_master_key(False)
 
-application = engine
+application = CookieSessionMiddleware(engine, secret=app.secret_key)
 
 
 if __name__ == '__main__':

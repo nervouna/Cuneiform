@@ -32,8 +32,7 @@ def index(post_per_page=10):
         current_page = 1
     posts, post_count = get_post_list(post_per_page, current_page)
     more = has_more_posts(current_page, post_count, post_per_page)
-    return render_template('index.html',
-                           posts=posts, more=more, page=current_page)
+    return render_template('index.html', posts=posts, more=more, page=current_page)
 
 
 @app.route('/new_post')
