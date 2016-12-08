@@ -52,6 +52,45 @@ class Post(Object):
         return self.set('author', author)
 
 
+class Tag(Object):
+    @property
+    def name(self):
+        return self.get('name')
+
+    @name.setter
+    def name(self, name):
+        return self.set('name', name)
+
+    @property
+    def post_count(self):
+        return self.post_count
+
+    @post_count.setter
+    def post_count(self, count=1):
+        assert type(count) is int
+        return self.increment('post_count', count)
+
+
+class TagPostMap(Object):
+    @property
+    def tag(self):
+        return self.get('tag')
+
+    @tag.setter
+    def tag(self, tag):
+        assert isinstance(tag, Tag)
+        return self.set('tag', tag)
+
+    @property
+    def post(self):
+        return self.get('post')
+
+    @post.setter
+    def post(self, post):
+        assert isinstance(post, Post)
+        return self.set('post', post)
+
+
 class User(Object):
     pass
 
