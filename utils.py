@@ -50,7 +50,13 @@ def get_single_post(post_id):
     post_id -- LeanCloud Object ID (default None)
     '''
     post_query = Query(Post)
-    single_post = post_query.get(post_id)
+    try:
+        single_post = post_query.get(post_id)
+    except LeanCloudError as e:
+        if e.code == 101:
+            return None
+        else:
+            raise e
     return single_post
 
 

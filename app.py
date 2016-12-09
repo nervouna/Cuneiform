@@ -6,6 +6,7 @@ from flask import request
 from flask import redirect
 from flask import url_for
 from flask import flash
+from flask import abort
 
 from markdown import markdown
 
@@ -76,6 +77,8 @@ def new_post():
 @app.route('/post/<post_id>')
 def show_post(post_id):
     post = get_single_post(post_id)
+    if not post:
+        abort(404)
     post.author.fetch()
     tags = get_tags_by_post(post)
     return render_template('single-post.html', post=post, tags=tags)
@@ -99,6 +102,9 @@ def login():
 
 @app.route('/user/logout')
 def logout():
-    user = User.get_current()
-    user.logout()
+    current_user = User.get_current()
+    # Won't actually log out due to a bug of the LeanCloud Python SDK.
+    # https://github.com/leancloud/python-sdk/issues/280
+    current_user.logout()
+    flash('info', 'Logged out.')
     return redirect(url_for('index'))
