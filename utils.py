@@ -8,14 +8,10 @@ from markdown import markdown
 from models import Post
 from models import User
 from models import Attachment
+from models import Tag
+from models import TagPostMap
 
-all = [
-    'get_post_list',
-    'has_more_posts',
-    'get_single_post',
-    'create_new_post',
-    'allowed_file',
-]
+import re
 
 
 def get_post_list(post_per_page=10, current_page=1):
@@ -74,6 +70,66 @@ def create_new_post(title, content, author, featuredImage):
         new_post.featuredImage = featuredImage
     new_post.save()
     return new_post
+
+
+def parse_tag_names(tag_string):
+    tag_string = tag_string.strip()
+    if len(tag_string) == 0:
+        return None
+    else:
+        return re.split('[,，;；、]', tag_string)
+
+
+def get_tag_by_name(tag_name):
+    tag_query = Query(Tag)
+    tag_name_regex = '^' + tag_name + '$'
+    try:
+        tag = tag_query.matched('name', tag_name_regex).first()
+    except LeanCloudError as e:
+        if e.code == 101:
+            return None
+        else:
+            raise e
+
+
+def set_tag_by_name(tag_name):
+    tag = get_tag_by_name(tag_name)
+    if tag is not None:
+        return tag
+    new_tag = Tag()
+    new_tag.name = tag_name
+    return new_tag
+
+
+def map_tags_to_post(tags, post):
+    for tag in tags:
+        tag_post_map = TagPostMap()
+        tag_post_map.tag = tag
+        tag_post_map.post = post
+        tag.increment('post_count')
+        tag_post_map.save()
+
+
+def get_tags_by_post(post):
+    map_query = Query(TagPostMap)
+    map_query.equal_to('post', post)
+    tag_post_maps = map_query.find()
+    if len(tag_post_maps) == 0:
+        return None
+    for tag_post_map in tag_post_maps:
+        tag_post_map.tag.fetch()
+    return [tag_post_map.tag for tag_post_map in tag_post_maps]
+
+
+def get_posts_by_tag(tag):
+    map_query = Query(TagPostMap)
+    map_query.equal_to('tag', tag)
+    tag_post_maps = map_query.find()
+    if len(tag_post_maps) == 0:
+        return None
+    for tag_post_map in tag_post_maps:
+        tag_post_map.post.fetch()
+    return [tag_post_map.post for tag_post_map in tag_post_maps]
 
 
 def allowed_file(ext):

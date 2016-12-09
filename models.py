@@ -63,12 +63,10 @@ class Tag(Object):
 
     @property
     def post_count(self):
-        return self.post_count
-
-    @post_count.setter
-    def post_count(self, count=1):
-        assert type(count) is int
-        return self.increment('post_count', count)
+        if self.get('post_count'):
+            return self.get('post_count')
+        else:
+            return 0
 
 
 class TagPostMap(Object):

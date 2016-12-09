@@ -15,7 +15,16 @@ from leancloud import LeanEngineError
 
 from models import User
 from models import Attachment
-from utils import *
+
+from utils import get_post_list
+from utils import has_more_posts
+from utils import get_single_post
+from utils import create_new_post
+from utils import parse_tag_names
+from utils import set_tag_by_name
+from utils import map_tags_to_post
+from utils import get_tags_by_post
+from utils import allowed_file
 
 
 app = Flask(__name__)
@@ -49,6 +58,7 @@ def post_form():
 def new_post():
     author = User.get_current()
     title, content = request.form['title'], request.form['content']
+    tag_names = parse_tag_names(request.form['tags'])
     f = request.files['featuredImage']
     if f.filename == '':
         featuredImage = None
@@ -57,15 +67,18 @@ def new_post():
     if featuredImage and not allowed_file(featuredImage.extension):
         flash('warning', 'Upload a proper image.')
         return redirect(url_for('post_form'))
-    new_post = create_new_post(title, content, author, featuredImage)
-    return redirect(url_for('show_post', post_id=new_post.id))
+    post = create_new_post(title, content, author, featuredImage)
+    tags = [set_tag_by_name(x) for x in tag_names]
+    map_tags_to_post(tags, post)
+    return redirect(url_for('show_post', post_id=post.id))
 
 
 @app.route('/post/<post_id>')
 def show_post(post_id):
     post = get_single_post(post_id)
     post.author.fetch()
-    return render_template('single-post.html', post=post)
+    tags = get_tags_by_post(post)
+    return render_template('single-post.html', post=post, tags=tags)
 
 
 @app.route('/user/login')
