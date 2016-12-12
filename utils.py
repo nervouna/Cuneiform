@@ -18,14 +18,14 @@ def get_posts(post_per_page=10, current_page=1, tag=None):
     if not tag:
         post_query = Query(Post)
         post_query.limit(post_per_page + 1)
-        post_query.add_ascending('createdAt')
+        post_query.add_descending('createdAt')
         if current_page > 1:
             post_query.skip((current_page - 1) * post_per_page)
         posts = post_query.find()
     else:
         post_query = Query(TagPostMap)
         post_query.limit(post_per_page + 1)
-        post_query.add_ascending('createdAt')
+        post_query.add_descending('createdAt')
         post_query.equal_to('tag', tag)
         post_query.include('post')
         if current_page > 1:
