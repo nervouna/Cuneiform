@@ -1,5 +1,6 @@
 from leancloud import Object
 from leancloud import File
+from leancloud import Query
 from leancloud import LeanCloudError
 
 from datetime import datetime
@@ -13,8 +14,6 @@ class Post(Object):
 
     @title.setter
     def title(self, title):
-        if title == '' or title is None:
-            title = datetime.now().strftime('Post On %Y-%m-%d %H:%M')
         return self.set('title', title)
 
     @property
@@ -39,7 +38,6 @@ class Post(Object):
 
     @featuredImage.setter
     def featuredImage(self, featuredImage):
-        assert isinstance(featuredImage, Attachment)
         return self.set('featuredImage', featuredImage)
 
     @property
@@ -48,7 +46,6 @@ class Post(Object):
 
     @author.setter
     def author(self, author):
-        assert isinstance(author, User)
         return self.set('author', author)
 
 
@@ -68,6 +65,17 @@ class Tag(Object):
         else:
             return 0
 
+    @classmethod
+    def get_by_name(self, name):
+        reg = '^' + name + '$'
+        try:
+            return self.query.matched('name', reg).first()
+        except LeanCloudError as e:
+            if e.code == 101:
+                return None
+            else:
+                raise e
+
 
 class TagPostMap(Object):
     @property
@@ -76,7 +84,6 @@ class TagPostMap(Object):
 
     @tag.setter
     def tag(self, tag):
-        assert isinstance(tag, Tag)
         return self.set('tag', tag)
 
     @property
@@ -85,8 +92,14 @@ class TagPostMap(Object):
 
     @post.setter
     def post(self, post):
-        assert isinstance(post, Post)
         return self.set('post', post)
+
+    @classmethod
+    def get_tags_by_post(self, post):
+        tags = [x.tag for x in self.query.equal_to('post', post).include('tag').find()]
+        if len(tags) == 0:
+            return None
+        return tags
 
 
 class User(Object):
@@ -95,3 +108,30 @@ class User(Object):
 
 class Attachment(File):
     pass
+
+
+class Page(Query):
+    def __init__(self, post_per_page=10, current_page=1, tag=None):
+        self.post_per_page = post_per_page
+        self.current_page = current_page
+        if not tag:
+            Query.__init__(self, Post)
+            self.limit(post_per_page + 1)
+            self.add_descending('createdAt')
+            self._is_tag_index = False
+        else:
+            Query.__init__(self, TagPostMap)
+            self.limit(post_per_page + 1)
+            self.add_descending('createdAt')
+            self.equal_to('tag', tag)
+            self.include('post')
+            self._is_tag_index = True
+
+    def posts(self):
+        if self.current_page > 1:
+            self.skip((self.current_page - 1) * self.post_per_page)
+        if self._is_tag_index:
+            items = {x.post for x in self.find()}
+        else:
+            items = self.find()
+        return items

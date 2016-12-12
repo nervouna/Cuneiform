@@ -16,17 +16,8 @@ from leancloud import LeanEngineError
 
 from leancloud import LeanCloudError
 
-from models import User
-from models import Attachment
-
-from utils import get_posts
-from utils import get_single_post
-from utils import create_new_post
+from models import (Post, Tag, TagPostMap, Attachment, User, Page)
 from utils import parse_tag_names
-from utils import get_tag_by_name
-from utils import set_tag_by_name
-from utils import map_tags_to_post
-from utils import get_tags_by_post
 from utils import allowed_file
 
 
@@ -42,7 +33,8 @@ def index(post_per_page=10):
     if 'page' in request.args.keys():
         current_page = int(request.args.get('page'))
     try:
-        posts, more = get_posts(post_per_page, current_page)
+        posts = Page(post_per_page, current_page).posts()
+        more = len(posts) - post_per_page == 1
     except LeanCloudError as e:
         if e.code == 101:
             posts, more = None, False
@@ -66,6 +58,7 @@ def new_post():
     author = User.get_current()
     title, content = request.form['title'], request.form['content']
     tag_names = parse_tag_names(request.form['tags'])
+
     f = request.files['featuredImage']
     if f.filename == '':
         featuredImage = None
@@ -74,19 +67,43 @@ def new_post():
     if featuredImage and not allowed_file(featuredImage.extension):
         flash('warning', 'Upload a proper image.')
         return redirect(url_for('post_form'))
-    post = create_new_post(title, content, author, featuredImage)
-    tags = [set_tag_by_name(x) for x in tag_names]
-    map_tags_to_post(tags, post)
+
+    post = Post()
+    post.title = title
+    post.content = content
+    post.markedContent = markdown(content)
+    post.author = author
+    if featuredImage:
+        post.featuredImage = featuredImage
+    post.save()
+
+    tags = []
+    for name in tag_names:
+        tag = Tag.get_by_name(name)
+        if not tag:
+            tag = Tag()
+            tag.name = name
+        tags.append(tag)
+    for tag in tags:
+        m = TagPostMap()
+        m.set({'tag': tag, 'post': post})
+        m.save()
+        tag.increment('post_count')
+    Tag.save_all(tags)
+
     return redirect(url_for('show_post', post_id=post.id))
 
 
 @app.route('/post/<post_id>')
 def show_post(post_id):
-    post = get_single_post(post_id)
-    if not post:
-        abort(404)
-    post.author.fetch()
-    tags = get_tags_by_post(post)
+    try:
+        post = Post.query.include('author').get(post_id)
+    except LeanCloudError as e:
+        if e.code == 101:
+            abort(404)
+        else:
+            raise e
+    tags = TagPostMap.get_tags_by_post(post)
     return render_template('single-post.html', post=post, tags=tags)
 
 
@@ -96,8 +113,9 @@ def tag_index(tag_name, post_per_page=10):
     if 'page' in request.args.keys():
         current_page = int(request.args.get('page'))
     try:
-        tag = get_tag_by_name(tag_name)
-        posts, more = get_posts(post_per_page, current_page, tag)
+        tag = Tag.get_by_name(tag_name)
+        posts = Page(post_per_page, current_page, tag).posts()
+        more = len(posts) - post_per_page == 1
     except LeanCloudError as e:
         if e.code == 101:
             tag, posts, more = None, None, False
