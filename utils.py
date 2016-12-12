@@ -69,7 +69,7 @@ def parse_tag_names(tag_string):
     if len(tag_string) == 0:
         return None
     else:
-        return re.split('[,，;；、]', tag_string)
+        return set(x.strip() for x in re.split('[,，;；、]', tag_string) if len(x) > 0)
 
 
 def get_tag_by_name(tag_name):

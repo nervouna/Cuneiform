@@ -97,7 +97,6 @@ def tag_index(tag_name, post_per_page=10):
         current_page = int(request.args.get('page'))
     try:
         tag = get_tag_by_name(tag_name)
-        print(tag_name)
         posts, more = get_posts(post_per_page, current_page, tag)
     except LeanCloudError as e:
         if e.code == 101:
