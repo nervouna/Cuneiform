@@ -14,6 +14,7 @@ from markdown import markdown
 from leancloud import Engine
 from leancloud import LeanEngineError
 
+from leancloud import ACL
 from leancloud import LeanCloudError
 
 from models import (Post, Tag, TagPostMap, Attachment, User, Page)
@@ -75,6 +76,12 @@ def new_post():
     post.author = author
     if featuredImage:
         post.featuredImage = featuredImage
+
+    acl = ACL()
+    acl.set_public_read_access(True)
+    acl.set_write_access(author.id, True)
+    post.set_acl(acl)
+
     post.save()
 
     tags = []
