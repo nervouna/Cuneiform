@@ -43,7 +43,7 @@ def index(post_per_page=10):
     return render_template('index.html', posts=posts, more=more, page=current_page)
 
 
-@app.route('/new_post')
+@app.route('/post/new')
 def post_form():
     current_user = User.get_current()
     if not current_user:
@@ -53,7 +53,7 @@ def post_form():
     return render_template('editor.html', current_user=current_user)
 
 
-@app.route('/new_post', methods=['POST'])
+@app.route('/post/new', methods=['POST'])
 def new_post():
     author = User.get_current()
     title, content = request.form['title'], request.form['content']
