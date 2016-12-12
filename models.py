@@ -14,7 +14,7 @@ class Post(Object):
 
     @title.setter
     def title(self, title):
-        return self.set('title', title)
+        self.set('title', title)
 
     @property
     def content(self):
@@ -22,7 +22,7 @@ class Post(Object):
 
     @content.setter
     def content(self, content):
-        return self.set('content', content)
+        self.set('content', content)
 
     @property
     def markedContent(self):
@@ -30,7 +30,7 @@ class Post(Object):
 
     @markedContent.setter
     def markedContent(self, markedContent):
-        return self.set('markedContent', markedContent)
+        self.set('markedContent', markedContent)
 
     @property
     def featuredImage(self):
@@ -38,7 +38,7 @@ class Post(Object):
 
     @featuredImage.setter
     def featuredImage(self, featuredImage):
-        return self.set('featuredImage', featuredImage)
+        self.set('featuredImage', featuredImage)
 
     @property
     def author(self):
@@ -46,7 +46,7 @@ class Post(Object):
 
     @author.setter
     def author(self, author):
-        return self.set('author', author)
+        self.set('author', author)
 
 
 class Tag(Object):
@@ -56,7 +56,7 @@ class Tag(Object):
 
     @name.setter
     def name(self, name):
-        return self.set('name', name)
+        self.set('name', name)
 
     @property
     def post_count(self):
@@ -84,7 +84,7 @@ class TagPostMap(Object):
 
     @tag.setter
     def tag(self, tag):
-        return self.set('tag', tag)
+        self.set('tag', tag)
 
     @property
     def post(self):
@@ -92,7 +92,7 @@ class TagPostMap(Object):
 
     @post.setter
     def post(self, post):
-        return self.set('post', post)
+        self.set('post', post)
 
     @classmethod
     def get_tags_by_post(self, post):
