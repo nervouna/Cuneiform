@@ -14,14 +14,16 @@ from markdown import markdown
 from leancloud import Engine
 from leancloud import LeanEngineError
 
+from leancloud import LeanCloudError
+
 from models import User
 from models import Attachment
 
-from utils import get_post_list
-from utils import has_more_posts
+from utils import get_posts
 from utils import get_single_post
 from utils import create_new_post
 from utils import parse_tag_names
+from utils import get_tag_by_name
 from utils import set_tag_by_name
 from utils import map_tags_to_post
 from utils import get_tags_by_post
@@ -36,12 +38,16 @@ engine = Engine(app)
 
 @app.route('/')
 def index(post_per_page=10):
+    current_page = 1
     if 'page' in request.args.keys():
-        current_page = int(request.args['page'])
-    else:
-        current_page = 1
-    posts, post_count = get_post_list(post_per_page, current_page)
-    more = has_more_posts(current_page, post_count, post_per_page)
+        current_page = int(request.args.get('page'))
+    try:
+        posts, more = get_posts(post_per_page, current_page)
+    except LeanCloudError as e:
+        if e.code == 101:
+            posts, more = None, False
+        else:
+            raise e
     return render_template('index.html', posts=posts, more=more, page=current_page)
 
 
@@ -82,6 +88,23 @@ def show_post(post_id):
     post.author.fetch()
     tags = get_tags_by_post(post)
     return render_template('single-post.html', post=post, tags=tags)
+
+
+@app.route('/tag/<tag_name>')
+def tag_index(tag_name, post_per_page=10):
+    current_page = 1
+    if 'page' in request.args.keys():
+        current_page = int(request.args.get('page'))
+    try:
+        tag = get_tag_by_name(tag_name)
+        print(tag_name)
+        posts, more = get_posts(post_per_page, current_page, tag)
+    except LeanCloudError as e:
+        if e.code == 101:
+            tag, posts, more = None, None, False
+        else:
+            raise e
+    return render_template('index.html', tag=tag, posts=posts, more=more, page=current_page)
 
 
 @app.route('/user/login')

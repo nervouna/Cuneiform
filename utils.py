@@ -14,33 +14,19 @@ from models import TagPostMap
 import re
 
 
-def get_post_list(post_per_page=10, current_page=1):
-    '''Return the post list.
-
-    Keyword arguments:
-    post_per_page -- posts per page (default 10)
-    current_page -- page number (default 1)
-    '''
-    post_query = Query(Post)
-    post_query.limit(post_per_page)
-    post_query.add_descending('createdAt')
-    if current_page > 1:
-        post_query.skip((current_page - 1) * post_per_page)
-    try:
-        post_list = post_query.find()
-        post_count = post_query.count()
-    except LeanCloudError as e:
-        if e.code == 101:
-            post_count = 0
-            post_list = []
-        else:
-            raise e
-    return post_list, post_count
-
-
-def has_more_posts(current_page, post_count, post_per_page):
-    '''Return True if there are posts to show in the next page.'''
-    return post_count > post_per_page * current_page
+def get_posts(post_per_page=10, current_page=1, tag=None):
+    if not tag:
+        post_query = Query(Post).limit(post_per_page + 1).add_ascending('createdAt')
+        if current_page > 1:
+            post_query.skip((current_page - 1) * post_per_page)
+        posts = post_query.find()
+    else:
+        post_query = Query(TagPostMap).limit(post_per_page + 1).add_ascending('createdAt')
+        post_query.include('post')
+        if current_page > 1:
+            post_query.skip((current_page - 1) * post_per_page)
+        posts = [x.post for x in post_query.find()]
+    return posts, len(posts) - post_per_page == 1
 
 
 def get_single_post(post_id):
@@ -91,6 +77,7 @@ def get_tag_by_name(tag_name):
     tag_name_regex = '^' + tag_name + '$'
     try:
         tag = tag_query.matched('name', tag_name_regex).first()
+        return tag
     except LeanCloudError as e:
         if e.code == 101:
             return None
@@ -125,17 +112,6 @@ def get_tags_by_post(post):
     for tag_post_map in tag_post_maps:
         tag_post_map.tag.fetch()
     return [tag_post_map.tag for tag_post_map in tag_post_maps]
-
-
-def get_posts_by_tag(tag):
-    map_query = Query(TagPostMap)
-    map_query.equal_to('tag', tag)
-    tag_post_maps = map_query.find()
-    if len(tag_post_maps) == 0:
-        return None
-    for tag_post_map in tag_post_maps:
-        tag_post_map.post.fetch()
-    return [tag_post_map.post for tag_post_map in tag_post_maps]
 
 
 def allowed_file(ext):

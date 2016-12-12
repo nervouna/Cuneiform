@@ -1,9 +1,13 @@
 {% extends "layout.html" %}
-{% block title %}Posts - Cuneiform{% endblock %}
+{% block title %}{% if tag %}{{ tag.name }}{% else %}Posts{% endif %} - Cuneiform{% endblock %}
 {% block body %}
 {% if posts %}
   <div class="posts">
+    {% if tag %}
+    <h1>Index of tag: {{ tag.name }}</h1>
+    {% else %}
     <h1>All Posts</h1>
+    {% endif %}
     {% for post in posts %}
     <h3><a href="{{ url_for('show_post', post_id=post.id) }}">{{ post.get('title') }}</a></h3>
     {% endfor %}
