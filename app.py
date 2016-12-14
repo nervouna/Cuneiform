@@ -150,8 +150,6 @@ def login():
 @app.route('/user/logout')
 def logout():
     current_user = User.get_current()
-    # Won't actually log out due to a bug of the LeanCloud Python SDK.
-    # https://github.com/leancloud/python-sdk/issues/280
     current_user.logout()
     flash('info', 'Logged out.')
     return redirect(url_for('index'))
