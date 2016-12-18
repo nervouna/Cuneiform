@@ -34,14 +34,15 @@ def index(post_per_page=10):
     if 'page' in request.args.keys():
         current_page = int(request.args.get('page'))
     try:
-        posts = Page(post_per_page, current_page).posts()
-        more = len(posts) - post_per_page == 1
+        page = Page(post_per_page, current_page)
+        posts = page.posts()
+        next = page.has_next
     except LeanCloudError as e:
         if e.code == 101:
             posts, more = None, False
         else:
             raise e
-    return render_template('index.html', posts=posts, more=more, page=current_page)
+    return render_template('index.html', posts=posts, next=next, page=current_page)
 
 
 @app.route('/post/new')
@@ -121,14 +122,15 @@ def tag_index(tag_name, post_per_page=10):
         current_page = int(request.args.get('page'))
     try:
         tag = Tag.get_by_name(tag_name)
-        posts = Page(post_per_page, current_page, tag).posts()
-        more = len(posts) - post_per_page == 1
+        page = Page(post_per_page, current_page, tag)
+        posts = page.posts()
+        next = page.has_next
     except LeanCloudError as e:
         if e.code == 101:
             tag, posts, more = None, None, False
         else:
             raise e
-    return render_template('index.html', tag=tag, posts=posts, more=more, page=current_page)
+    return render_template('index.html', tag=tag, posts=posts, next=next, page=current_page)
 
 
 @app.route('/user/login')

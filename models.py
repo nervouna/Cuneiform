@@ -111,27 +111,33 @@ class Attachment(File):
 
 
 class Page(Query):
-    def __init__(self, post_per_page=10, current_page=1, tag=None):
-        self.post_per_page = post_per_page
-        self.current_page = current_page
-        if not tag:
+    def __init__(self, post_per_page, current_page, tag=None):
+        self._post_per_page = post_per_page
+        self._current_page = current_page
+        if tag is None:
             Query.__init__(self, Post)
             self.limit(post_per_page + 1)
             self.add_descending('createdAt')
             self._is_tag_index = False
-        else:
+        elif isinstance(tag, Tag):
             Query.__init__(self, TagPostMap)
             self.limit(post_per_page + 1)
             self.add_descending('createdAt')
             self.equal_to('tag', tag)
             self.include('post')
             self._is_tag_index = True
+        else:
+            raise TypeError('tag should be `None` or instance of `Tag`')
 
     def posts(self):
-        if self.current_page > 1:
-            self.skip((self.current_page - 1) * self.post_per_page)
+        self.has_next = False
+        if self._current_page > 1:
+            self.skip((self._current_page - 1) * self._post_per_page)
         if self._is_tag_index:
-            items = {x.post for x in self.find()}
+            items = [x.post for x in self.find()]
         else:
             items = self.find()
+        if len(items) - self._post_per_page == 1:
+            self.has_next = True
+            return items[:-1]
         return items

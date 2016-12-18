@@ -15,7 +15,7 @@
   <nav aria-label="...">
     <ul class="pager">
       {% if page > 1 %}<li><a href="{{ url_for('index', page=page-1) }}">Previous</a></li>{% endif %}
-      {% if more %}<li><a href="{{ url_for('index', page=page+1) }}">Next</a></li>{% endif %}
+      {% if next %}<li><a href="{{ url_for('index', page=page+1) }}">Next</a></li>{% endif %}
     </ul>
   </nav>
 {% else %}
