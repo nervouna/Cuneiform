@@ -25,20 +25,20 @@ class Post(Object):
         self.set('content', content)
 
     @property
-    def markedContent(self):
-        return self.get('markedContent')
+    def marked_content(self):
+        return self.get('marked_content')
 
-    @markedContent.setter
-    def markedContent(self, markedContent):
-        self.set('markedContent', markedContent)
+    @marked_content.setter
+    def marked_content(self, marked_content):
+        self.set('marked_content', marked_content)
 
     @property
-    def featuredImage(self):
-        return self.get('featuredImage')
+    def featured_image(self):
+        return self.get('featured_image')
 
-    @featuredImage.setter
-    def featuredImage(self, featuredImage):
-        self.set('featuredImage', featuredImage)
+    @featured_image.setter
+    def featured_image(self, featured_image):
+        self.set('featured_image', featured_image)
 
     @property
     def author(self):
@@ -66,7 +66,7 @@ class Tag(Object):
             return 0
 
     @classmethod
-    def get_by_name(self, name):
+    def get_by_name(cls, name):
         reg = '^' + name + '$'
         try:
             return self.query.matched('name', reg).first()
@@ -95,7 +95,7 @@ class TagPostMap(Object):
         self.set('post', post)
 
     @classmethod
-    def get_tags_by_post(self, post):
+    def get_tags_by_post(cls, post):
         tags = [x.tag for x in self.query.equal_to('post', post).include('tag').find()]
         if len(tags) == 0:
             return None

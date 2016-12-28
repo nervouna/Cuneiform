@@ -61,22 +61,22 @@ def new_post():
     title, content = request.form['title'], request.form['content']
     tag_names = parse_tag_names(request.form['tags'])
 
-    f = request.files['featuredImage']
+    f = request.files['featured_image']
     if f.filename == '':
-        featuredImage = None
+        featured_image = None
     else:
-        featuredImage = Attachment(f.filename, data=f.stream)
-    if featuredImage and not allowed_file(featuredImage.extension):
+        featured_image = Attachment(f.filename, data=f.stream)
+    if featured_image and not allowed_file(featured_image.extension):
         flash('warning', 'Upload a proper image.')
         return redirect(url_for('post_form'))
 
     post = Post()
     post.title = title
     post.content = content
-    post.markedContent = markdown(content)
+    post.marked_content = markdown(content)
     post.author = author
-    if featuredImage:
-        post.featuredImage = featuredImage
+    if featured_image:
+        post.featured_image = featured_image
 
     acl = ACL()
     acl.set_public_read_access(True)
