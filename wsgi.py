@@ -1,49 +1,36 @@
 # -*- coding: utf-8 -*-
 
 import os
+
 import leancloud
+
 from app import app
-from app import engine
-from leancloud.engine.cookie_session import CookieSessionMiddleware
-
-from gevent import monkey
-monkey.patch_all()
 
 
-APP_ID = os.environ['LEANCLOUD_APP_ID']
-APP_KEY = os.environ['LEANCLOUD_APP_KEY']
-MASTER_KEY = os.environ['LEANCLOUD_APP_MASTER_KEY']
-PORT = int(os.environ['LEANCLOUD_APP_PORT'])
-try:
-    # Make sure you have configured your SECRET_KEY in LeanCloud console.
-    SECRET_KEY = bytes(os.environ['FLASK_SECRET_KEY'], 'utf-8')
-except KeyError:
-    # If the app fails to get a SECRET_KEY from os.environ, use dev key instead
-    # And boy it's dangerous on production servers, take care.
-    SECRET_KEY = b'dev'
-
-app.secret_key = SECRET_KEY
+APP_ID = os.environ["LEANCLOUD_APP_ID"]
+APP_KEY = os.environ["LEANCLOUD_APP_KEY"]
+MASTER_KEY = os.environ["LEANCLOUD_APP_MASTER_KEY"]
+PORT = int(os.environ["LEANCLOUD_APP_PORT"])
+FLASK_SECRET_KEY = bytes(os.environ["FLASK_SECRET_KEY"], "utf-8")
 
 leancloud.init(APP_ID, app_key=APP_KEY, master_key=MASTER_KEY)
-# Using master key is like granting root access in Linux. Use it wisely.
 leancloud.use_master_key(False)
 
-application = CookieSessionMiddleware(engine, secret=app.secret_key)
+app.secret_key = FLASK_SECRET_KEY
+app = leancloud.engine.CookieSessionMiddleware(app, secret=app.secret_key)
+
+application = app
 
 
-if __name__ == '__main__':
-    # Following code is only excuted when debugging on localhost.
-    from gevent.pywsgi import WSGIServer
-    from geventwebsocket.handler import WebSocketHandler
-    from werkzeug.serving import run_with_reloader
-    from werkzeug.debug import DebuggedApplication
-
-    @run_with_reloader
-    def run():
-        global application
-        app.debug = True
-        application = DebuggedApplication(application, evalex=True)
-        server = WSGIServer(('localhost', PORT), application)
-        server.serve_forever()
-
-    run()
+if __name__ == "__main__":
+    from werkzeug.serving import run_simple
+    extra_dirs = ["templates", ]
+    extra_files = extra_dirs[:]
+    for extra_dir in extra_dirs:
+        for dirname, dirs, files in os.walk(extra_dir):
+            for filename in files:
+                filename = os.path.join(dirname, filename)
+                if os.path.isfile(filename):
+                    extra_files.append(filename)
+    application.debug = True
+    run_simple("0.0.0.0", 3000, application, use_reloader=True, use_debugger=True, extra_files=extra_files)
