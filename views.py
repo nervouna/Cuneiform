@@ -1,7 +1,7 @@
-from flask import render_template, request
+from flask import render_template, request, url_for, redirect
 from app import app
-from helpers import validate_form_data
-from models import Post
+from helpers import validate_form_data, allowed_file
+from models import Post, Attachment
 
 
 @app.errorhandler(400)
@@ -51,8 +51,12 @@ def post_editor():
 
 @app.route("/posts/new", methods=["POST"])
 def create_post():
-	print(validate_form_data(request.form))
-	return render_template("post_editor.html")
+	required_fields = ['title', 'content']
+	post_data = {x:request.form[x] for x in required_fields}
+	post = Post()
+	post.set(post_data)
+	post.save()
+	return redirect(url_for('post', post_id=post.id))
 
 
 @app.route("/posts/<string:post_id>", methods=["POST"])
