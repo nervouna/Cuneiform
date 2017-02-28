@@ -4,6 +4,7 @@
 	<title>{% block title %}{% endblock %} - Cuneiform</title>
 </head>
 <body>
+<a href="{{ url_for('post_list') }}">All Posts</a> | <a href="{{ url_for('create_post') }}">New Post</a> | <a href="{{ url_for('login_form') }}">Login</a> | <a href="{{ url_for('logout') }}">Logout</a>
 {% block content %}{% endblock %}
 </body>
 </html>
