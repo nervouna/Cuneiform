@@ -9,7 +9,7 @@ from models import Post
 @app.errorhandler(403)
 @app.errorhandler(404)
 def error_page(e):
-	return render_template("errors/%i.html" % e.code), 400
+	return render_template("errors/%i.html" % e.code), e.code
 
 
 @app.route("/")
@@ -26,7 +26,7 @@ def post_list():
 @app.route("/posts/<string:post_id>")
 def post(post_id):
 	post = Post.query.get(post_id)
-	return render_template("post.html", post=post) 
+	return render_template("post.html", post=post)
 
 
 @app.route("/login")
