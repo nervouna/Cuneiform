@@ -2,7 +2,9 @@
 {% block title %}{{ post.get('title') }}{% endblock %}
 {% block content %}
 <article>
-	<img src="{{ post.get('featuredImage').url }}">
+	{% if post.get('featured_image') %}
+	<img src="{{ post.get('featured_image').get_thumbnail_url(width=600, height=600) }}">
+	{% endif %}
 	<h1>{{ post.get('title') }}</h1>
 	<div>{{ post.get('content')|safe }}</div>
 	{% if g.user %}

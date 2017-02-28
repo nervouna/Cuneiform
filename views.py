@@ -1,7 +1,7 @@
 from flask import render_template, request, url_for, redirect, g
 from app import app
 from helpers import validate_form_data, allowed_file, protected
-from models import Post, Author
+from models import Post, Author, Attachment
 
 
 @app.before_request
@@ -24,7 +24,7 @@ def front_page():
 
 @app.route("/posts/")
 def post_list():
-	posts = Post.query.add_ascending('createdAt').equal_to('trashed', False).limit(10).find()
+	posts = Post.query.add_descending('createdAt').equal_to('trashed', False).limit(10).find()
 	return render_template("post_list.html", posts=posts)
 
 
@@ -66,11 +66,24 @@ def post_editor():
 @app.route("/posts/new", methods=["POST"])
 @protected
 def create_post():
+	
 	required_fields = ['title', 'content']
 	post_data = {x:request.form[x] for x in required_fields}
 	post = Post()
 	post.set(post_data)
+
+	upload_image = request.files['featured_image']
+	if upload_image.filename != '':
+		try:
+			f = Attachment(upload_image.filename, data=upload_image.stream)
+		except TypeError as e:
+			print('exception was caught when processing uploaded image:', e)
+			print('using `stream.file` instead')
+			f = Attachment(upload_image.filename, data=upload_image.stream.file)
+		post.set('featured_image', f)
+	
 	post.save()
+	
 	return redirect(url_for('post', post_id=post.id))
 
 

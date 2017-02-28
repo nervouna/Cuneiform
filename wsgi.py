@@ -16,9 +16,7 @@ FLASK_SECRET_KEY = bytes(os.environ["FLASK_SECRET_KEY"], "utf-8")
 leancloud.init(APP_ID, app_key=APP_KEY, master_key=MASTER_KEY)
 leancloud.use_master_key(False)
 
-app.secret_key = FLASK_SECRET_KEY
-
-application = app
+application = leancloud.engine.CookieSessionMiddleware(app, secret=FLASK_SECRET_KEY)
 
 
 if __name__ == "__main__":
