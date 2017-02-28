@@ -19,7 +19,7 @@ def front_page():
 
 @app.route("/posts/")
 def post_list():
-	posts = Post.query.add_ascending('createdAt').limit(10).find()
+	posts = Post.query.add_ascending('createdAt').equal_to('trashed', False).limit(10).find()
 	return render_template("post_list.html", posts=posts)
 
 
@@ -66,4 +66,7 @@ def update_post(post_id):
 
 @app.route("/posts/<string:post_id>/delete")
 def delete_post(post_id):
-	return render_template("post.html")
+	post = Post.create_without_data(post_id)
+	post.set('trashed', True)
+	post.save()
+	return redirect(url_for('post_list'))
