@@ -4,7 +4,15 @@
 	<title>{% block title %}{% endblock %} - Cuneiform</title>
 </head>
 <body>
-<a href="{{ url_for('post_list') }}">All Posts</a> | <a href="{{ url_for('create_post') }}">New Post</a> | <a href="{{ url_for('login_form') }}">Login</a> | <a href="{{ url_for('logout') }}">Logout</a>
+<ul>
+	<li><a href="{{ url_for('post_list') }}">All Posts</a></li>
+	{% if not g.user.is_authenticated %}
+	<li><a href="{{ url_for('login') }}">Login</a></li>
+	{% else %}
+	<li><a href="{{ url_for('post_editor') }}">New Post</a></li>
+	<li><a href="{{ url_for('logout') }}">Logout</a></li>
+	{% endif %}
+</ul>
 {% block content %}{% endblock %}
 </body>
 </html>

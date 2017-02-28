@@ -1,7 +1,12 @@
-from flask import render_template, request, url_for, redirect
+from flask import render_template, request, url_for, redirect, g
 from app import app
 from helpers import validate_form_data, allowed_file, protected
 from models import Post, Author
+
+
+@app.before_request
+def before_request():
+	g.user = Author.get_current()
 
 
 @app.errorhandler(400)
