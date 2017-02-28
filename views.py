@@ -1,6 +1,6 @@
-from flask import render_template
+from flask import render_template, request
 from app import app
-from helpers import protected
+from helpers import validate_form_data
 from models import Post
 
 
@@ -45,24 +45,21 @@ def logout():
 
 
 @app.route("/posts/new")
-@protected
 def post_editor():
 	return render_template("post_editor.html")
 
 
 @app.route("/posts/new", methods=["POST"])
-@protected
 def create_post():
+	print(validate_form_data(request.form))
 	return render_template("post_editor.html")
 
 
 @app.route("/posts/<string:post_id>", methods=["POST"])
-@protected
 def update_post(post_id):
 	return render_template("post_editor.html")
 
 
 @app.route("/posts/<string:post_id>/delete")
-@protected
 def delete_post(post_id):
 	return render_template("post.html")
