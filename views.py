@@ -59,8 +59,8 @@ def logout():
 
 @app.route("/posts/new")
 @protected
-def post_editor():
-    return render_template("post_editor.html")
+def create_post_form():
+    return render_template("create_post_form.html")
 
 
 @app.route("/posts/new", methods=["POST"])
@@ -90,7 +90,7 @@ def create_post():
 @app.route("/posts/<string:post_id>", methods=["POST"])
 @protected
 def update_post(post_id):
-    return render_template("post_editor.html")
+    return render_template("update_post_form.html", post=post)
 
 
 @app.route("/posts/<string:post_id>/delete")
