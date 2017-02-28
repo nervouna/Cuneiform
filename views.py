@@ -1,6 +1,6 @@
 from flask import render_template, request, url_for, redirect
 from app import app
-from helpers import validate_form_data, allowed_file
+from helpers import validate_form_data, allowed_file, protected
 from models import Post, Author
 
 
@@ -44,6 +44,7 @@ def login():
 
 
 @app.route("/logout")
+@protected
 def logout():
 	current_user = Author.get_current()
 	if current_user:
@@ -52,11 +53,13 @@ def logout():
 
 
 @app.route("/posts/new")
+@protected
 def post_editor():
 	return render_template("post_editor.html")
 
 
 @app.route("/posts/new", methods=["POST"])
+@protected
 def create_post():
 	required_fields = ['title', 'content']
 	post_data = {x:request.form[x] for x in required_fields}
@@ -67,11 +70,13 @@ def create_post():
 
 
 @app.route("/posts/<string:post_id>", methods=["POST"])
+@protected
 def update_post(post_id):
 	return render_template("post_editor.html")
 
 
 @app.route("/posts/<string:post_id>/delete")
+@protected
 def delete_post(post_id):
 	post = Post.create_without_data(post_id)
 	post.set('trashed', True)
