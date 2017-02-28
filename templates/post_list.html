@@ -1,5 +1,7 @@
 {% extends "layout/base.html" %}
 {% block title %}Post List{% endblock %}
 {% block content %}
-	Post List
+{% for post in posts %}
+	<a href="{{ url_for('post', post_id=post.id) }}">{{ post.get('title') }}</a>
+{% endfor %}
 {% endblock %}

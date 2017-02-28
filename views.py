@@ -19,13 +19,14 @@ def front_page():
 
 @app.route("/posts/")
 def post_list():
-	return render_template("post_list.html")
+	posts = Post.query.add_ascending('createdAt').limit(10).find()
+	return render_template("post_list.html", posts=posts)
 
 
 @app.route("/posts/<string:post_id>")
 def post(post_id):
 	post = Post.query.get(post_id)
-	return render_template("post.html", post=post)
+	return render_template("post.html", post=post) 
 
 
 @app.route("/login")
