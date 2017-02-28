@@ -73,7 +73,7 @@ def create_post():
 	post.set(post_data)
 
 	upload_image = request.files['featured_image']
-	if upload_image.filename != '':
+	if upload_image.filename != '' and allowed_file(upload_image.filename):
 		try:
 			f = Attachment(upload_image.filename, data=upload_image.stream)
 		except TypeError as e:
