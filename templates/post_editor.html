@@ -1,7 +1,7 @@
 {% extends "layout/base.html" %}
 {% block title %}Post Editor{% endblock %}
 {% block content %}
-<form action="{{ url_for('create_post') }}", method="post">
+<form action="{{ url_for('create_post') }}", method="post" enctype="multipart/form-data">
     <label>Post Title</label>
     <input type="text" name="title">
     <label>Tags (seperate with `,`)</label>
@@ -11,5 +11,6 @@
     <hr>
     <label>Content</label>
     <textarea name="content"></textarea>
+    <input type="submit" value="Submit">
 </form>
 {% endblock %}
