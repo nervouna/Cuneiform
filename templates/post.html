@@ -5,6 +5,8 @@
 	<img src="{{ post.get('featuredImage').url }}">
 	<h1>{{ post.get('title') }}</h1>
 	<div>{{ post.get('content')|safe }}</div>
+	{% if g.user %}
 	<a href="{{ url_for('delete_post', post_id=post.id) }}">Delete This Post</a>
+	{% endif %}
 </article>
 {% endblock %}
