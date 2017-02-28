@@ -1,5 +1,9 @@
 {% extends "layout/base.html" %}
-{% block title %}Post{% endblock %}
+{% block title %}{{ post.get('title') }}{% endblock %}
 {% block content %}
-	Post.html
+<article>
+	<img src="{{ post.get('featuredImage').url }}">
+	<h1>{{ post.get('title') }}</h1>
+	<div>{{ post.get('markedContent')|safe }}</div>
+</article>
 {% endblock %}

@@ -17,7 +17,6 @@ leancloud.init(APP_ID, app_key=APP_KEY, master_key=MASTER_KEY)
 leancloud.use_master_key(False)
 
 app.secret_key = FLASK_SECRET_KEY
-app = leancloud.engine.CookieSessionMiddleware(app, secret=app.secret_key)
 
 application = app
 
