@@ -1,7 +1,4 @@
-{% extends "layout/base.html" %}
-{% block title %}Post List{% endblock %}
-{% block content %}
+<a href="{{ url_for('login_form') }}">Login</a> | <a href="{{ url_for('logout') }}">Logout</a>
 {% for post in posts %}
 	<a href="{{ url_for('post', post_id=post.id) }}">{{ post.get('title') }}</a>
 {% endfor %}
-{% endblock %}

@@ -1,7 +1,7 @@
 from flask import render_template, request, url_for, redirect
 from app import app
 from helpers import validate_form_data, allowed_file
-from models import Post, Attachment
+from models import Post, Author
 
 
 @app.errorhandler(400)
@@ -31,17 +31,24 @@ def post(post_id):
 
 @app.route("/login")
 def login_form():
-	return render_template("login.html")
+	return render_template("user_login.html")
 
 
 @app.route("/login", methods=["POST"])
 def login():
-	pass
+	credentials = ['username', 'password']
+	user_data = {x:request.form[x] for x in credentials}
+	author = Author()
+	author.login(**user_data)
+	return redirect(url_for('post_list'))
 
 
 @app.route("/logout")
 def logout():
-	pass
+	current_user = Author.get_current()
+	if current_user:
+		current_user.logout()
+	return redirect(url_for('post_list'))
 
 
 @app.route("/posts/new")
