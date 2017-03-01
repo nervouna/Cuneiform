@@ -2,6 +2,6 @@
 {% block title %}Post List{% endblock %}
 {% block content %}
 {% for post in posts %}
-	<a href="{{ url_for('post', post_id=post.id) }}"><h1>{{ post.get('title') }}</h1></a>
+	<a href="{{ url_for('show_post', post_id=post.id) }}"><h1>{{ post.get('title') }}</h1></a>
 {% endfor %}
 {% endblock %}

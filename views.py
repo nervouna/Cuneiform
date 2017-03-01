@@ -29,7 +29,7 @@ def post_list():
 
 
 @app.route("/posts/<string:post_id>")
-def post(post_id):
+def show_post(post_id):
     post = Post.query.get(post_id)
     return render_template("post.html", post=post)
 
@@ -66,7 +66,7 @@ def create_post_form():
 @app.route("/posts/new", methods=["POST"])
 @protected
 def create_post():
-    
+
     required_fields = ['title', 'content']
     post_data = {x:request.form[x] for x in required_fields}
     post = Post()
@@ -81,16 +81,43 @@ def create_post():
             print('using `stream.file` instead')
             f = Attachment(upload_image.filename, data=upload_image.stream.file)
         post.set('featured_image', f)
-    
+
     post.save()
-    
-    return redirect(url_for('post', post_id=post.id))
+
+    return redirect(url_for('show_post', post_id=post.id))
 
 
-@app.route("/posts/<string:post_id>", methods=["POST"])
+@app.route("/posts/<string:post_id>/edit")
+@protected
+def update_post_form(post_id):
+    post=Post.create_without_data(post_id)
+    post.fetch()
+    return render_template("update_post_form.html", post=post)
+
+
+@app.route("/posts/<string:post_id>/edit", methods=["POST"])
 @protected
 def update_post(post_id):
-    return render_template("update_post_form.html", post=post)
+
+    post=Post.create_without_data(post_id)
+    editable_fields = ['title', 'content']
+    post_data = {x:request.form[x] for x in editable_fields}
+    post.set(post_data)
+
+    upload_image = request.files['featured_image']
+
+    if upload_image.filename != '' and allowed_file(upload_image.filename):
+        try:
+            f = Attachment(upload_image.filename, data=upload_image.stream)
+        except TypeError as e:
+            print('exception was caught when processing uploaded image:', e)
+            print('using `stream.file` instead')
+            f = Attachment(upload_image.filename, data=upload_image.stream.file)
+        post.set('featured_image', f)
+
+    post.save()
+
+    return redirect(url_for('show_post', post_id=post.id))
 
 
 @app.route("/posts/<string:post_id>/delete")
