@@ -8,8 +8,10 @@
     {% if post.get('featured_image') %}
     <h3>Current Featured Image</h3>
     <img src="{{ post.get('featured_image').get_thumbnail_url(width=100, height=100) }}">
-    {% endif %}
     <label>Upload a New One</label>
+    {% else %}
+    <label>Featured Image</label>
+    {% endif %}
     <input type="file" name="featured_image">
     <hr>
     <label>Content</label>

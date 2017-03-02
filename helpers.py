@@ -17,6 +17,7 @@ def protected(func):
     return secret_view
 
 
-def allowed_file(ext):
+def allowed_file(filename):
+    ext = filename.rsplit('.', 1)[-1]
     allowed_ext = ['jpg', 'jpeg', 'png', 'svg', 'gif', 'bmp']
     return ext.lower() in allowed_ext

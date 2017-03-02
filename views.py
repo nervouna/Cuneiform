@@ -107,6 +107,7 @@ def update_post(post_id):
     upload_image = request.files['featured_image']
 
     if upload_image.filename != '' and allowed_file(upload_image.filename):
+        print('yay')
         try:
             f = Attachment(upload_image.filename, data=upload_image.stream)
         except TypeError as e:
