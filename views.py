@@ -74,12 +74,7 @@ def create_post():
 
     upload_image = request.files['featured_image']
     if upload_image.filename != '' and allowed_file(upload_image.filename):
-        try:
-            f = Attachment(upload_image.filename, data=upload_image.stream)
-        except TypeError as e:
-            print('exception was caught when processing uploaded image:', e)
-            print('using `stream.file` instead')
-            f = Attachment(upload_image.filename, data=upload_image.stream.file)
+        f = Attachment(upload_image.filename, data=upload_image.stream)
         post.set('featured_image', f)
 
     post.save()
@@ -107,13 +102,7 @@ def update_post(post_id):
     upload_image = request.files['featured_image']
 
     if upload_image.filename != '' and allowed_file(upload_image.filename):
-        print('yay')
-        try:
-            f = Attachment(upload_image.filename, data=upload_image.stream)
-        except TypeError as e:
-            print('exception was caught when processing uploaded image:', e)
-            print('using `stream.file` instead')
-            f = Attachment(upload_image.filename, data=upload_image.stream.file)
+        f = Attachment(upload_image.filename, data=upload_image.stream)
         post.set('featured_image', f)
 
     post.save()
