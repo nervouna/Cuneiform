@@ -3,7 +3,7 @@
 {% block content %}
 <article>
     {% if post.get('featured_image') %}
-    <header class="featured" style="background-image: url({{ post.get('featured_image').url }});background-size: 100%">
+    <header class="featured" style="background-image: url({{ post.get('featured_image').url }});background-size: cover;background-position: center;">
         <h1>{{ post.get('title') }}</h1>
         <p class="post-create-time">
             Posted on {{ post.get('createdAt').strftime('%Y-%m-%d %H:%M:%S') }}
