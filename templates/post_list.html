@@ -1,7 +1,9 @@
 {% extends "layout/base.html" %}
-{% block title %}Post List{% endblock %}
+{% block title %}All Posts{% endblock %}
 {% block content %}
+<section class="list">
 {% for post in posts %}
-	<a href="{{ url_for('show_post', post_id=post.id) }}"><h1>{{ post.get('title') }}</h1></a>
+	<h1><a href="{{ url_for('show_post', post_id=post.id) }}">{{ post.get('title') }}</a></h1>
 {% endfor %}
+</section>
 {% endblock %}

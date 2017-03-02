@@ -1,5 +1,5 @@
 {% extends "layout/base.html" %}
-{% block title %}Post Editor{% endblock %}
+{% block title %}Editing: {{ post.get('title') }}{% endblock %}
 {% block content %}
 <form action="{{ url_for('update_post', post_id=post.id) }}", method="post" enctype="multipart/form-data">
     <label>Post Title</label>
