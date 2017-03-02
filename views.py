@@ -94,9 +94,9 @@ def update_post_form(post_id):
 @protected
 def update_post(post_id):
 
-    post=Post.create_without_data(post_id)
     editable_fields = ['title', 'content']
     post_data = {x:request.form[x] for x in editable_fields}
+    post=Post.create_without_data(post_id)
     post.set(post_data)
 
     upload_image = request.files['featured_image']
