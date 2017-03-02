@@ -2,28 +2,34 @@
 {% block title %}{{ post.get('title') }}{% endblock %}
 {% block content %}
 <article>
-    <header>
-    	{% if post.get('featured_image') %}
-    	<img src="{{ post.get('featured_image').get_thumbnail_url(width=600, height=600) }}">
-    	{% endif %}
-    	<h1>{{ post.get('title') }}</h1>
-        <p class="post-create-time">Posted on {{ post.get('createdAt').strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    {% if post.get('featured_image') %}
+    <header class="featured" style="background-image: url({{ post.get('featured_image').url }});background-size: 100%">
+        <h1>{{ post.get('title') }}</h1>
+        <p class="post-create-time">
+            Posted on {{ post.get('createdAt').strftime('%Y-%m-%d %H:%M:%S') }}
+            {% if g.user %}
+            | <a href="{{ url_for('update_post_form', post_id=post.id) }}">Edit</a> | <a href="{{ url_for('delete_post', post_id=post.id) }}">Delete</a>
+            {% endif %}
+        </p>
     </header>
-	<div class="post-content">{{ post.get('marked_content')|safe }}</div>
-    {% if post.get('createdAt') != post.get('updatedAt') %}
-    <footer class="post-update-time">
-        <p>Updated on {{ post.get('updatedAt').strftime('%Y-%m-%d %H:%M:%S') }}</p>
-    </footer>
+    {% else %}
+    <header>
+        <h1>{{ post.get('title') }}</h1>
+        <p class="post-create-time">
+            Posted on {{ post.get('createdAt').strftime('%Y-%m-%d %H:%M:%S') }}
+            {% if g.user %}
+            | <a href="{{ url_for('update_post_form', post_id=post.id) }}">Edit</a> | <a href="{{ url_for('delete_post', post_id=post.id) }}">Delete</a>
+            {% endif %}
+        </p>
+    </header>
     {% endif %}
-	{% if g.user %}
-    <ul class="admin-links">
-        <li>
-            <a href="{{ url_for('update_post_form', post_id=post.id) }}">Edit</a>
-        </li>
-        <li>
-            <a href="{{ url_for('delete_post', post_id=post.id) }}">Delete</a>
-        </li>
-    </ul>
-	{% endif %}
+	<div class="post-content">
+        {{ post.get('marked_content')|safe }}
+    </div>
+    <footer>
+        <p>
+            Updated At {{ post.get('updatedAt').strftime('%Y-%m-%d %H:%M:%S') }}
+        </p>
+    </footer>
 </article>
 {% endblock %}

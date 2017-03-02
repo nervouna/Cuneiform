@@ -1,1 +1,314 @@
-* {font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Sans GB", Arial, sans-serif;}
+*, :after, :before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 0 22vw;
+    margin: 0 auto;
+    font-family: -apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Sans GB",Arial,sans-serif;
+    font-size: 1.6vw;
+    /*font-weight: 300;*/
+    line-height: 1.42857143;
+    color: #000;
+    font-feature-settings: "kern","case","ss01";
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+a:focus, a:hover {
+    text-decoration: underline;
+    -webkit-text-decoration-skip: ink;
+    text-decoration-skip: ink;
+}
+
+blockquote {
+    display: block;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 40px;
+    -webkit-margin-end: 40px;
+}
+
+hr {
+    border: 0;
+}
+
+
+
+.navigation {
+    padding-top: 1.4vmax;
+    padding-bottom: 1.4vmax;
+    margin-right: -1.1em;
+    margin-left: -1.1em;
+    font-size: 60%;
+    letter-spacing: .45em;
+    text-transform: uppercase;
+}
+
+.navigation ul {
+    margin-bottom: 0;
+}
+
+.navigation li {
+    display: inline-block;
+    line-height: 2;
+    list-style: none;
+}
+
+.navigation li a {
+    padding: .5em 1.2em;
+}
+
+.navigation li a:hover {
+	text-decoration: none;
+	color: #4A90E2;
+}
+
+.content {
+    margin-bottom: 16vmin;
+}
+
+.content header {
+    display: -ms-flexbox;
+    display: flex;
+    min-height: calc(50vh - 5.6vmax - 5ex);
+    margin-bottom: 16vmin;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-pack: center;
+    justify-content: center;
+    background: #FAFAFA;
+    margin-left: -22vw;
+    margin-right: -22vw;
+    padding: 10vmin 22vw;
+}
+
+.content header h1 {
+    font-size: 360%;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 600;
+    letter-spacing: -.04em;
+    margin-left: -2px;
+    -webkit-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+    line-height: 1.1;
+}
+
+.content header .post-create-time {
+    display: block;
+    margin-top: 2vmin;
+    font-size: smaller;
+}
+
+.content header.featured {
+    min-height: calc(100vh - 5.6vmax - 5ex);
+
+}
+
+.content header.featured * {
+    color: #FFF;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5)
+}
+
+.content p {
+    margin-bottom: 1.6rem;
+    line-height: 1.71428571;
+}
+
+.content blockquote {
+    position: relative;
+    margin-bottom: 2.8rem;
+    margin-left: calc(-1.2vw - 2px);
+    font-size: 90%;
+}
+
+.content blockquote>p {
+    padding-left: 1.2vw;
+    border-left: 2px solid;
+    padding-bottom: 1.6rem;
+    margin-bottom: 0;
+    opacity: .6;
+}
+
+.content blockquote>p:last-of-type {
+    padding-bottom: 0;
+    margin-bottom: 1.6rem;
+}
+
+ol, ul {
+    margin-bottom: 1.8rem;
+    list-style: none;
+    counter-reset: list;
+}
+
+.content ol li, .content ul li {
+    line-height: 1.71428571;
+}
+
+
+.content ul li:before {
+    content: "•";
+    padding-right: .6em;
+}
+.content ol li:before, .content ul li:before {
+    position: absolute;
+    display: inline-block;
+    width: 4em;
+    margin-left: -4em;
+    font-size: 80%;
+    line-height: 2.14285714;
+    text-align: right;
+    opacity: .6;
+    pointer-events: none;
+}
+
+.content hr::before {
+    display: block;
+    content: '';
+    width: 3px;
+    height: 3px;
+    margin: 2em auto;
+    border-radius: 50%;
+    background: #000;
+    box-shadow: 24px 0 0 0 #000, -24px 0 0 0 #000;
+}
+
+.content article footer p {
+	font-size: 75%;
+	color: rgba(0,0,0, .5);
+}
+
+.footer {
+    padding: 0 0 16vmin;
+    font-size: 75%;
+}
+
+.footer ul li {
+    display: inline;
+    list-style: none;
+}
+
+.footer ul li:before {
+	content:none;
+}
+
+.footer ul li:after {
+    padding: 0 .6vw;
+    content: " / ";
+    opacity: .3;
+}
+
+.footer ul li:last-child:after {
+    content: none;
+}
+
+.highlighter-rouge .highlight {
+    background: rgba(22,43,68,.02);
+}
+.content pre {
+    padding: 1.2vw;
+    margin-left: -1.2vw;
+    margin-right: -1.2vw;
+    margin-bottom: 1.8rem;
+    overflow-x: auto;
+    font-size: 80%;
+    background: rgba(0,136,255,.04);
+    -webkit-overflow-scrolling: touch;
+}
+.content code, .content pre {
+    font-family: Menlo,Consolas,monospace;
+    color: #00cc80;
+}
+.content pre {
+    line-height: 1.71428571;
+}
+*, :after, :before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+user agent stylesheet
+pre, xmp, plaintext, listing {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    margin: 1em 0px 1em;
+}
+
+.content ol li:before {
+    counter-increment: list;
+    content: counter(list) ".";
+    padding-right: .3em;
+}
+.content ol li:before, .content ul li:before {
+    position: absolute;
+    display: inline-block;
+    width: 4em;
+    margin-left: -4em;
+    font-size: 80%;
+    line-height: 2.14285714;
+    text-align: right;
+    opacity: .6;
+    pointer-events: none;
+}
+
+form.post input,textarea{
+    display: block;
+    margin: 0 0 3vh 0;
+}
+
+input.post-title:focus {
+    outline: none;
+    padding: 4px 10px;
+    background-color: rgba(0,0,0,0.1);
+    transition-property: padding-left;
+    transition-duration: 0.2s;
+}
+
+input.post-title {
+    width: 100%;
+    display: block;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    font-size: 160%;
+    padding: 4px;
+}
+
+textarea.post-content {
+    width: 100%;
+    resize: none;
+    height: 55vh;
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: 4px;
+    font-size: 1vw;
+    font-family: monospace;
+    line-height: 1.3vw;
+}
+
+input.submit  {
+    border: none;
+    background: none;
+    padding: 10px 0;
+    font-size: 1.6vw;
+    color: rgba(0,0,0,0.7);
+    cursor: pointer;
+    font-weight: 700;
+    float: left;
+    transition-property: color;
+    transition-duration: 0.2s;
+}
+
+input.submit:hover, input.submit:focus {
+    outline: none;
+    color: #4A90E2;
+    margin-right: 5px;
+    transition-property: color;
+    transition-duration: 0.2s;
+}

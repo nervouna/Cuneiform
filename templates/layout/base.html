@@ -5,19 +5,26 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+<nav class="navigation">
+    <ul>
+        <li><a href="{{ url_for('post_list') }}">All Posts</a></li>
+        {% if not g.user.is_authenticated %}
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+        {% else %}
+        <li><a href="{{ url_for('create_post_form') }}">New Post</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        {% endif %}
+    </ul>
+</nav>
 <main class="content">
-    <nav class="navigation">
-        <ul>
-            <li><a href="{{ url_for('post_list') }}">All Posts</a></li>
-            {% if not g.user.is_authenticated %}
-            <li><a href="{{ url_for('login') }}">Login</a></li>
-            {% else %}
-            <li><a href="{{ url_for('create_post_form') }}">New Post</a></li>
-            <li><a href="{{ url_for('logout') }}">Logout</a></li>
-            {% endif %}
-        </ul>
-    </nav>
 {% block content %}{% endblock %}
 </main>
+<footer class="footer">
+    <ul>
+        <li>Powered by <a target="_blank" href="https://leancloud.cn">LeanCloud</a></li>
+        <li>Runs on <a target="_blank" href="https://leancloud.cn/docs/leanengine_overview.html">LeanEngine</a></li>
+        <li>Theme inspired by <a target="_blank" href="https://sparanoid.com/lab/amsf/theme-curtana.html">Curtana</a></li>
+    </ul>
+</footer>
 </body>
 </html>

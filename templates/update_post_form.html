@@ -1,21 +1,15 @@
 {% extends "layout/base.html" %}
 {% block title %}Editing: {{ post.get('title') }}{% endblock %}
 {% block content %}
-<form action="{{ url_for('update_post', post_id=post.id) }}", method="post" enctype="multipart/form-data">
-    <label>Post Title</label>
-    <input type="text" name="title" value="{{ post.get('title') }}">
-    <hr>
+<form class="post" action="{{ url_for('create_post') }}", method="post" enctype="multipart/form-data">
+    <input class="post-title" type="text" name="title" placeholder="Post Title" value="{{ post.get('title') }}">
     {% if post.get('featured_image') %}
-    <h3>Current Featured Image</h3>
-    <img src="{{ post.get('featured_image').get_thumbnail_url(width=100, height=100) }}">
-    <label>Upload a New One</label>
-    {% else %}
-    <label>Featured Image</label>
+    <h4>Current Featured Image</h4>
+    <p><a title="Click to open in new window" href="{{ post.get('featured_image').url }}" target="_blank"><img src="{{ post.get('featured_image').get_thumbnail_url(width=50, height=50) }}"></a></p>
+    <h4>Upload a New One</h4>
     {% endif %}
-    <input type="file" name="featured_image">
-    <hr>
-    <label>Content</label>
-    <textarea name="content">{{ post.get('content') }}</textarea>
-    <input type="submit" value="Submit">
+    <input class="uploader" type="file" name="featured_image">
+    <textarea class="post-content" name="content" placeholder="Post Content">{{ post.get('content') }}</textarea>
+    <input class="submit" type="submit" value="Submit">
 </form>
 {% endblock %}

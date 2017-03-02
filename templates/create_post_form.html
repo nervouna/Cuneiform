@@ -1,14 +1,10 @@
 {% extends "layout/base.html" %}
 {% block title %}Post Editor{% endblock %}
 {% block content %}
-<form action="{{ url_for('create_post') }}", method="post" enctype="multipart/form-data">
-    <label>Post Title</label>
-    <input type="text" name="title">
-    <label>Featured Image</label>
-    <input type="file" name="featured_image">
-    <hr>
-    <label>Content</label>
-    <textarea name="content"></textarea>
-    <input type="submit" value="Submit">
+<form class="post" action="{{ url_for('create_post') }}", method="post" enctype="multipart/form-data">
+    <input class="post-title" type="text" name="title" placeholder="Post Title">
+    <input class="uploader" type="file" name="featured_image">
+    <textarea class="post-content" name="content" placeholder="Post Content"></textarea>
+    <input class="submit" type="submit" value="Submit">
 </form>
 {% endblock %}

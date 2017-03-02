@@ -18,10 +18,6 @@ def error_page(e):
 
 
 @app.route("/")
-def front_page():
-    return render_template("index.html")
-
-
 @app.route("/posts/")
 def post_list():
     posts = Post.query.add_descending('createdAt').equal_to('trashed', False).limit(10).find()
