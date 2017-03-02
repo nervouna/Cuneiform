@@ -6,7 +6,11 @@
 	<img src="{{ post.get('featured_image').get_thumbnail_url(width=600, height=600) }}">
 	{% endif %}
 	<h1>{{ post.get('title') }}</h1>
+    <p>Posted on {{ post.get('createdAt').strftime('%Y-%m-%d %H:%M:%S') }}</p>
 	<div>{{ post.get('content')|safe }}</div>
+    {% if post.get('createdAt') != post.get('updatedAt') %}
+    <p>Updated on {{ post.get('updatedAt').strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    {% endif %}
 	{% if g.user %}
     <a href="{{ url_for('update_post_form', post_id=post.id) }}">Edit</a>
 	<a href="{{ url_for('delete_post', post_id=post.id) }}">Delete This Post</a>
