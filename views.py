@@ -1,4 +1,4 @@
-from flask import render_template, request, url_for, redirect, g
+from flask import render_template, request, url_for, redirect, g, abort
 from app import app
 from helpers import allowed_file, protected
 from models import Post, Author, Attachment
@@ -20,8 +20,18 @@ def error_page(e):
 @app.route("/")
 @app.route("/posts/")
 def post_list():
-    posts = Post.query.add_descending('createdAt').equal_to('trashed', False).limit(10).find()
-    return render_template("post_list.html", posts=posts)
+    current_page = request.args.get('page')
+    current_page = 1 if not current_page else int(current_page)
+    has_prev = has_next = False
+    skip = (current_page - 1) * 10
+    posts = Post.query.add_descending('createdAt').equal_to('trashed', False).skip(skip).limit(11).find()
+    if current_page > 1:
+        has_prev = True
+    if len(posts) == 11:
+        has_next = True
+    if len(posts) == 0:
+        abort(404)
+    return render_template("post_list.html", posts=posts, has_prev=has_prev, has_next=has_next, current_page=current_page)
 
 
 @app.route("/posts/<string:post_id>")

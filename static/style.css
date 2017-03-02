@@ -27,6 +27,12 @@ a:focus, a:hover {
     text-decoration-skip: ink;
 }
 
+a.disabled {
+   pointer-events: none;
+   cursor: default;
+   color: #CACACA;
+}
+
 blockquote {
     display: block;
     -webkit-margin-before: 1em;
@@ -115,6 +121,10 @@ hr {
 .content header.featured * {
     color: #FFF;
     text-shadow: 0 0 5px rgba(0,0,0,0.5)
+}
+
+.content .list h1:last-of-type {
+    margin-bottom: 4vmin;
 }
 
 .content p {
@@ -312,3 +322,16 @@ input.submit:hover, input.submit:focus {
     transition-property: color;
     transition-duration: 0.2s;
 }
+
+nav.pagination ul li {
+    display: inline;
+    margin: 0 5vw 0 0;
+}
+
+nav.pagination ul li:before {
+    content: none;
+}
+
+nav.pagination ul li a {
+/*    font-size: 75%;
+*/}
