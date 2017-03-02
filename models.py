@@ -5,14 +5,6 @@ class Post(Object):
     pass
 
 
-class Tag(Object):
-    pass
-
-
-class TagPostMap(Object):
-    pass
-
-
 class Author(User):
     pass
 
