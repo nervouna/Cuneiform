@@ -1,6 +1,6 @@
 from flask import render_template, request, url_for, redirect, g
 from app import app
-from helpers import validate_form_data, allowed_file, protected
+from helpers import allowed_file, protected
 from models import Post, Author, Attachment
 
 

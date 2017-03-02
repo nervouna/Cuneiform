@@ -20,14 +20,3 @@ def protected(func):
 def allowed_file(ext):
     allowed_ext = ['jpg', 'jpeg', 'png', 'svg', 'gif', 'bmp']
     return ext.lower() in allowed_ext
-
-
-def validate_form_data(raw_data):
-    form_data = raw_data.to_dict()
-    allowed_fields = ['title', 'content', 'tags']
-    if len(form_data.keys()) != len(allowed_fields):
-        raise ValueError
-    for field in allowed_fields:
-        if field not in form_data.keys():
-            raise ValueError
-    return form_data
