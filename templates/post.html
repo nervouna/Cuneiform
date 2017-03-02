@@ -7,7 +7,7 @@
 	{% endif %}
 	<h1>{{ post.get('title') }}</h1>
     <p>Posted on {{ post.get('createdAt').strftime('%Y-%m-%d %H:%M:%S') }}</p>
-	<div>{{ post.get('content')|safe }}</div>
+	<div>{{ post.get('marked_content')|safe }}</div>
     {% if post.get('createdAt') != post.get('updatedAt') %}
     <p>Updated on {{ post.get('updatedAt').strftime('%Y-%m-%d %H:%M:%S') }}</p>
     {% endif %}
