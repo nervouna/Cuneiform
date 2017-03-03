@@ -2,17 +2,22 @@
 {% block title %}All Posts{% endblock %}
 {% block content %}
 <header>
-	<h1>All Posts</h1>
+    <h1>Cuneiform</h1>
+    <p>A tiny blog runs on <a href="https://leancloud.cn/">LeanCloud</a>.</p>
 </header>
 <section class="list">
-{% for post in posts %}
-	<h1><a href="{{ url_for('show_post', post_id=post.id) }}">{{ post.get('title') }}</a></h1>
-{% endfor %}
-<nav class="pagination">
-<ul>
-	<li><a {% if not has_next %}class="disabled"{% endif %} href="{{ url_for('post_list', page=current_page + 1) }}">Older Posts</a></li>
-	<li><a {% if not has_prev %}class="disabled"{% endif %} href="{{ url_for('post_list', page=current_page - 1) }}">Newer Posts</a></li>
-</ul>
-</nav>
+    {% if not posts %}
+    <p>Nothing to see here.</p>
+    {% else %}
+    {% for post in posts %}
+    <h1><a href="{{ url_for('show_post', post_id=post.id) }}">{{ post.get('title') }}</a></h1>
+    {% endfor %}
+    <nav class="pagination">
+        <ul>
+            <li><a {% if not has_next %}class="disabled"{% endif %} href="{{ url_for('post_list', page=current_page + 1) }}">Older Posts</a></li>
+            <li><a {% if not has_prev %}class="disabled"{% endif %} href="{{ url_for('post_list', page=current_page - 1) }}">Newer Posts</a></li>
+        </ul>
+    </nav>
+    {% endif %}
 </section>
 {% endblock %}

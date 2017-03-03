@@ -32,7 +32,7 @@ def post_list():
     if len(posts) == 11:
         has_next = True
     if len(posts) == 0:
-        abort(404)
+        posts = None
     return render_template("post_list.html", posts=posts, has_prev=has_prev, has_next=has_next, current_page=current_page)
 
 
