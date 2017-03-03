@@ -1,0 +1,22 @@
+{% extends "layout/base.html" %}
+{% block title %}
+    Error
+{% endblock %}
+{% block content %}
+    <header>
+        <h1>{{ error }}</h1>
+    </header>
+    <section class="content">
+    <p>
+    {% if error.code == 404 %}
+        This is not the page you are looking for.
+    {% elif error.code == 403 %}
+        You don't have the permission to visit this page.
+    {% elif error.code == 401 %}
+        Please <a href="{{ url_for('login') }}">login</a> before visiting this page.
+    {% elif error.code == 400 %}
+        You have made a request that the server do not understand.
+    {% endif %}
+    </p>
+    </section>
+{% endblock %}

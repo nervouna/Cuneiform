@@ -1,4 +1,6 @@
 from flask import render_template, request, url_for, redirect, g, abort
+from leancloud import LeanCloudError
+
 from app import app
 from helpers import allowed_file, protected
 from models import Post, Author, Attachment
@@ -14,7 +16,7 @@ def before_request():
 @app.errorhandler(403)
 @app.errorhandler(404)
 def error_page(e):
-    return render_template("errors/%i.html" % e.code), e.code
+    return render_template("error.html", error=e), e.code
 
 
 @app.route("/")
@@ -36,7 +38,13 @@ def post_list():
 
 @app.route("/posts/<string:post_id>")
 def show_post(post_id):
-    post = Post.query.get(post_id)
+    try:
+        post = Post.query.get(post_id)
+    except LeanCloudError as e:
+        if e.code == 101:
+            abort(404)
+        else:
+            raise e
     return render_template("post.html", post=post)
 
 
@@ -50,7 +58,10 @@ def login():
     credentials = ['username', 'password']
     user_data = {x:request.form[x] for x in credentials}
     author = Author()
-    author.login(**user_data)
+    try:
+        author.login(**user_data)
+    except LeanCloudError as e:
+        abort(400)
     return redirect(url_for('post_list'))
 
 
