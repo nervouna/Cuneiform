@@ -9,19 +9,17 @@ from app import app
 engine = Engine(app)
 
 
-@engine.after_save('Post')
-def after_post_save(post):
+@engine.before_save('Post')
+def before_post_save(post):
     content = post.get('content')
     post.set('marked_content', markdown(content))
-    post.save()
     print('已经完成帖子排版：', post.get('title'))
 
 
-@engine.after_update('Post')
-def after_post_update(post):
+@engine.before_update('Post')
+def before_post_update(post):
     content = post.get('content')
     post.set('marked_content', markdown(content))
-    post.save()
     print('已经完成帖子排版：', post.get('title'))
 
 
