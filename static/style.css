@@ -358,6 +358,9 @@ nav.pagination ul li:before {
     content: none;
 }
 
-nav.pagination ul li a {
-/*    font-size: 75%;
-*/}
+
+.content h1, h2, h3, h4, h5, h6 {
+    font-weight: 400;
+    margin-top: 3.2rem;
+    margin-bottom: 1.6rem;
+}
