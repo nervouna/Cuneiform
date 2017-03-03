@@ -80,26 +80,6 @@ hr {
     margin-bottom: 16vmin;
 }
 
-.content h2 {
-  font-size: 108%;
-  opacity: .8;
-}
-.content h3 {
-  font-size: 96%;
-  opacity: .7;
-}
-.content h4 {
-  font-size: 84%;
-  opacity: .6;
-}
-.content h5 {
-  font-size: 72%;
-  opacity: .5;
-}
-.content h6 {
-  font-size: 60%;
-  opacity: .4;
-}
 .content header {
     display: -ms-flexbox;
     display: flex;
@@ -356,13 +336,12 @@ input[type="file"] {
 .uploader-container {
     padding: 0;
     margin: 0 0 3vh 0;
-    min-height:
-    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    min-height: 7vmin;
     position: relative;
 }
 
 .uploader-placeholder {
-    font-size: 160%;
+    font-size: 120%;
     padding: 4px;
     color: rgba(0, 0, 0, .4);
     position: absolute;
