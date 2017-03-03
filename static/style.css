@@ -115,7 +115,7 @@ hr {
 
 .content header.featured {
     min-height: calc(100vh - 5.6vmax - 5ex);
-
+    background-color: rgba(0,0,0,.7);
 }
 
 .content header.featured * {
