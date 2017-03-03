@@ -3,13 +3,27 @@
 {% block content %}
 <form class="post" action="{{ url_for('create_post') }}", method="post" enctype="multipart/form-data">
     <input class="post-title" type="text" name="title" placeholder="Post Title" value="{{ post.get('title') }}">
-    {% if post.get('featured_image') %}
-    <h4>Current Featured Image</h4>
-    <p><a title="Click to open in new window" href="{{ post.get('featured_image').url }}" target="_blank"><img src="{{ post.get('featured_image').get_thumbnail_url(width=50, height=50) }}"></a></p>
-    <h4>Upload a New One</h4>
-    {% endif %}
-    <input class="uploader" type="file" name="featured_image">
+    <div class="uploader-container">
+        {% if not post.get('featured_image') %}
+        <p class="uploader-placeholder">
+        Click to upload a header image (if you want to).
+        {% else %}
+        <p class="uploader-placeholder" style="color:white;width:100%;background-image: url({{ post.get('featured_image').url }});background-repeat: no-repeat;background-position: center;background-size: cover;">
+        Click to upload another header image.
+        {% endif %}
+        </p>
+        <input class="uploader" type="file" name="featured_image">
+    </div>
     <textarea class="post-content" name="content" placeholder="Post Content">{{ post.get('content') }}</textarea>
     <input class="submit" type="submit" value="Submit">
 </form>
+<script type="text/javascript">
+    var uploader = document.getElementsByClassName('uploader')[0];
+    uploader.onchange = function() {
+        file = this.files[0];
+        placeholder = document.getElementsByClassName('uploader-placeholder')[0];
+        placeholder.innerText = '📦 Will upload: ' + file.name;
+        placeholder.style.color = '#000'
+    }
+</script>
 {% endblock %}

@@ -1,9 +1,13 @@
 {% extends "layout/base.html" %}
 {% block title %}Index{% endblock %}
 {% block content %}
+<header>
+    <h1>Login</h1>
+    <p>Login to create or delete posts. Add a user in LeanCloud dashboard.</p>
+</header>
     <form action="{{ url_for('login') }}" method="post">
-        <input type="text" name="username">
-        <input type="password" name="password">
+        <input type="text" name="username" placeholder="Username">
+        <input type="password" name="password" placeholder="Password">
         <input type="submit" value="Login">
     </form>
 {% endblock %}

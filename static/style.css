@@ -269,12 +269,12 @@ pre, xmp, plaintext, listing {
     pointer-events: none;
 }
 
-form.post input,textarea{
+form input,textarea{
     display: block;
     margin: 0 0 3vh 0;
 }
 
-input.post-title:focus {
+input:focus {
     outline: none;
     padding: 4px 10px;
     background-color: rgba(0,0,0,0.1);
@@ -282,7 +282,7 @@ input.post-title:focus {
     transition-duration: 0.2s;
 }
 
-input.post-title {
+input {
     width: 100%;
     display: block;
     border: none;
@@ -302,9 +302,11 @@ textarea.post-content {
     line-height: 1.3vw;
 }
 
-input.submit  {
+input[type="submit"]  {
     border: none;
     background: none;
+    width: 10vw;
+    text-align: left;
     padding: 10px 0;
     font-size: 1.6vw;
     color: rgba(0,0,0,0.7);
@@ -315,12 +317,36 @@ input.submit  {
     transition-duration: 0.2s;
 }
 
-input.submit:hover, input.submit:focus {
+input[type="submit"]:hover, input[type="submit"]:focus {
     outline: none;
     color: #4A90E2;
     margin-right: 5px;
     transition-property: color;
     transition-duration: 0.2s;
+}
+
+input[type="file"] {
+    opacity: 0;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.uploader-container {
+    padding: 0;
+    margin: 0 0 3vh 0;
+    min-height: 7vmin;
+    position: relative;
+}
+
+.uploader-placeholder {
+    font-size: 120%;
+    padding: 4px;
+    color: rgba(0, 0, 0, .4);
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 nav.pagination ul li {

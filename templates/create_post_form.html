@@ -3,8 +3,20 @@
 {% block content %}
 <form class="post" action="{{ url_for('create_post') }}", method="post" enctype="multipart/form-data">
     <input class="post-title" type="text" name="title" placeholder="Post Title">
-    <input class="uploader" type="file" name="featured_image">
+    <div class="uploader-container">
+        <p class="uploader-placeholder">Click to upload a header image (if you want to).</p>
+        <input class="uploader" type="file" name="featured_image">
+    </div>
     <textarea class="post-content" name="content" placeholder="Post Content"></textarea>
     <input class="submit" type="submit" value="Submit">
 </form>
+<script type="text/javascript">
+    var uploader = document.getElementsByClassName('uploader')[0];
+    uploader.onchange = function() {
+        file = this.files[0];
+        placeholder = document.getElementsByClassName('uploader-placeholder')[0];
+        placeholder.innerText = '📦 Will upload: ' + file.name;
+        placeholder.style.color = '#000'
+    }
+</script>
 {% endblock %}
