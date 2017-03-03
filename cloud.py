@@ -1,5 +1,6 @@
 from leancloud import Engine
 from markdown import markdown
+from mdx_gfm import GithubFlavoredMarkdownExtension as gfme
 from datetime import datetime, timedelta, timezone
 
 from models import Post
@@ -12,14 +13,14 @@ engine = Engine(app)
 @engine.before_save('Post')
 def before_post_save(post):
     content = post.get('content')
-    post.set('marked_content', markdown(content))
+    post.set('marked_content', markdown(content, extensions=[gfme()]))
     print('已经完成帖子排版：', post.get('title'))
 
 
 @engine.before_update('Post')
 def before_post_update(post):
     content = post.get('content')
-    post.set('marked_content', markdown(content))
+    post.set('marked_content', markdown(content, extensions=[gfme()]))
     print('已经完成帖子排版：', post.get('title'))
 
 
