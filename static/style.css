@@ -305,10 +305,10 @@ textarea.post-content {
 input[type="submit"]  {
     border: none;
     background: none;
-    width: 10vw;
+    width: 100%;
+    font-size: 120%;
     text-align: left;
     padding: 10px 0;
-    font-size: 1.6vw;
     color: rgba(0,0,0,0.7);
     cursor: pointer;
     font-weight: 700;
