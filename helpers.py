@@ -1,6 +1,8 @@
 import re
 from functools import wraps
 from flask import abort
+from markdown import markdown as m
+
 from models import Author
 
 
@@ -21,3 +23,7 @@ def allowed_file(filename):
     ext = filename.rsplit('.', 1)[-1]
     allowed_ext = ['jpg', 'jpeg', 'png', 'svg', 'gif', 'bmp']
     return ext.lower() in allowed_ext
+
+
+def markdown(text):
+    return m(text, extensions=['fenced_code'])

@@ -2,7 +2,7 @@ from flask import render_template, request, url_for, redirect, g, abort
 from leancloud import LeanCloudError
 
 from app import app
-from helpers import allowed_file, protected
+from helpers import allowed_file, protected, markdown
 from models import Post, Author, Attachment
 
 
@@ -84,8 +84,11 @@ def create_post_form():
 @protected
 def create_post():
 
-    required_fields = ['title', 'content']
-    post_data = {x:request.form[x] for x in required_fields}
+    post_data = {
+        'title': request.form.get('title'),
+        'content': request.form.get('content'),
+        'marked_content': markdown(request.form.get('content'))
+    }
     post = Post()
     post.set(post_data)
 
@@ -111,8 +114,11 @@ def update_post_form(post_id):
 @protected
 def update_post(post_id):
 
-    editable_fields = ['title', 'content']
-    post_data = {x:request.form[x] for x in editable_fields}
+    post_data = {
+        'title': request.form.get('title'),
+        'content': request.form.get('content'),
+        'marked_content': markdown(request.form.get('content'))
+    }
     post=Post.create_without_data(post_id)
     post.set(post_data)
 

@@ -1,5 +1,4 @@
 from leancloud import Engine
-from markdown import markdown
 from datetime import datetime, timedelta, timezone
 
 from models import Post
@@ -7,22 +6,6 @@ from app import app
 
 
 engine = Engine(app)
-
-
-@engine.before_save('Post')
-def before_post_save(post):
-    content = post.get('content')
-    marked_content = markdown(content)
-    post.set('marked_content', marked_content)
-    print('已经完成帖子排版：', post.get('title'))
-
-
-@engine.before_update('Post')
-def before_post_update(post):
-    content = post.get('content')
-    marked_content = markdown(content)
-    post.set('marked_content', marked_content)
-    print('已经完成帖子排版：', post.get('title'))
 
 
 @engine.define
