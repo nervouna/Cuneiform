@@ -28,7 +28,7 @@
     </div>
     <footer>
         <p>
-            Updated At {{ post.get('updatedAt').strftime('%Y-%m-%d %H:%M:%S') }}
+            {% if post.get('is_updated') %}Updated At {{ post.get('updatedAt').strftime('%Y-%m-%d %H:%M:%S') }}{% endif %}
         </p>
     </footer>
 </article>
