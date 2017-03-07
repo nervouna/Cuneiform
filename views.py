@@ -3,6 +3,7 @@ from leancloud import LeanCloudError
 
 from app import app
 from helpers import allowed_file, protected, markdown
+from helpers import split_tag_names, get_tag_names_from_map_list, get_tag_by_name, set_tag_by_name, map_tag_to_post
 from models import Post, Author, Attachment
 
 
@@ -98,6 +99,12 @@ def create_post():
         post.set('featured_image', f)
 
     post.save()
+
+    tag_names = request.form.get('tags').lower().strip()
+    if tag_names != '':
+        tags = [get_tag_by_name(x) if get_tag_by_name(x) is not None else set_tag_by_name(x) for x in split_tag_names(tag_names)]
+        for tag in tags:
+            map_tag_to_post(tag, post)
 
     return redirect(url_for('show_post', post_id=post.id))
 
