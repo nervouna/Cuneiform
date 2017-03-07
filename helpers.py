@@ -63,7 +63,7 @@ def set_tag_by_name(tag_name):
     return tag
 
 
-def map_tag_to_post(tags, post):
+def map_tags_to_post(tags, post):
     for tag in tags:
         tag_post_map = TagPostMap()
         tag_post_map.set({'tag': tag, 'post': post})
