@@ -1,10 +1,23 @@
-from flask import render_template, request, url_for, redirect, g, abort
+from flask import render_template
+from flask import request
+from flask import url_for
+from flask import redirect
+from flask import g
+from flask import abort
 from leancloud import LeanCloudError
 
 from app import app
-from helpers import allowed_file, protected, markdown
-from helpers import split_tag_names, get_tag_by_name, get_tags_by_post, map_tags_to_post, remove_tag_from_post
-from models import Post, Author, Attachment
+from helpers import allowed_file
+from helpers import protected
+from helpers import markdown
+from helpers import split_tag_names
+from helpers import get_tag_by_name
+from helpers import get_tags_by_post
+from helpers import map_tags_to_post
+from helpers import remove_tag_from_post
+from models import Post
+from models import Author
+from models import Attachment
 
 
 @app.before_request
@@ -140,7 +153,9 @@ def update_post(post_id):
         new_tags = [get_tag_by_name(x) for x in split_tag_names(tag_names)]
         old_tags = get_tags_by_post(post)
         if new_tags != old_tags:
-
+            for old_tag in old_tags:
+                remove_tag_from_post(old_tag, post)
+                map_tags_to_post(new_tags, post)
 
     post.save()
 
