@@ -14,7 +14,7 @@ from helpers import split_tag_names
 from helpers import get_tag_by_name
 from helpers import get_tags_by_post
 from helpers import map_tags_to_post
-from helpers import remove_tag_from_post
+from helpers import remove_all_tags_from_post
 from models import Post
 from models import Author
 from models import Attachment
@@ -116,9 +116,8 @@ def create_post():
     post.save()
 
     tag_names = request.form.get('tags').lower().strip()
-    if tag_names != '':
-        tags = [get_tag_by_name(x) for x in split_tag_names(tag_names)]
-        map_tags_to_post(tags, post)
+    tags = [get_tag_by_name(x) for x in split_tag_names(tag_names)]
+    map_tags_to_post(tags, post)
 
     return redirect(url_for('show_post', post_id=post.id))
 
@@ -126,9 +125,10 @@ def create_post():
 @app.route("/posts/<string:post_id>/edit")
 @protected
 def update_post_form(post_id):
-    post=Post.create_without_data(post_id)
+    post = Post.create_without_data(post_id)
+    tag_names = ','.join([x.get('name') for x in get_tags_by_post(post)])
     post.fetch()
-    return render_template("update_post_form.html", post=post)
+    return render_template("update_post_form.html", post=post, tag_names=tag_names)
 
 
 @app.route("/posts/<string:post_id>/edit", methods=["POST"])
@@ -149,16 +149,15 @@ def update_post(post_id):
         f = Attachment(upload_image.filename, data=upload_image.stream)
         post.set('featured_image', f)
 
-    tag_names = request.form.get('tags').lower().strip()
-    if tag_names != '':
-        new_tags = [get_tag_by_name(x) for x in split_tag_names(tag_names)]
-        old_tags = get_tags_by_post(post)
-        if new_tags != old_tags:
-            for old_tag in old_tags:
-                remove_tag_from_post(old_tag, post)
-                map_tags_to_post(new_tags, post)
+    old_tag_names = [x.get('name') for x in get_tags_by_post(post)]
+    new_tag_names = split_tag_names(request.form.get('tags').lower().strip())
+    if len(new_tag_names) != len(old_tag_names):
+        if len(old_tag_names) > 0:
+            remove_all_tags_from_post(post)
+        if len(new_tag_names) > 0:
+            map_tags_to_post([get_tag_by_name(x) for x in new_tag_names], post)
 
-    post.save()
+    post.save() 
 
     return redirect(url_for('show_post', post_id=post.id))
 

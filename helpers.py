@@ -72,8 +72,8 @@ def map_tags_to_post(tags, post):
         tag_post_map.save()
 
 
-def remove_tag_from_post(tag, post):
-    tag_post_maps = TagPostMap.query.equal_to('tag', tag).equal_to('post', post).equal_to('trashed', False).find()
+def remove_all_tags_from_post(post):
+    tag_post_maps = TagPostMap.query.equal_to('post', post).equal_to('trashed', False).find()
     for tag_post_map in tag_post_maps:
         tag_post_map.set('trashed', True)
         tag_post_map.save()
