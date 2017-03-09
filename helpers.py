@@ -43,14 +43,17 @@ def split_tag_names(tag_name_string):
     return tag_names
 
 
-def get_tag_by_name(tag_name):
+def get_tag_by_name(tag_name, auto_create=True):
     try:
         tag = Tag.query.equal_to('name', tag_name).first()
     except LeanCloudError as e:
         if e.code == 101:
-            tag = Tag()
-            tag.set('name', tag_name)
-            tag.save()
+            if auto_create == True:
+                tag = Tag()
+                tag.set('name', tag_name)
+                tag.save()
+            else:
+                tag = None
         else:
             raise e
     return tag

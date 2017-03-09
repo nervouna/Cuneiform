@@ -38,16 +38,30 @@ def error_page(e):
 def post_list():
     current_page = request.args.get('page')
     current_page = 1 if not current_page else int(current_page)
+    posts = Post.query.add_descending('createdAt').equal_to('trashed', False).limit(11).skip((current_page - 1) * 10).find()
     has_prev = has_next = False
-    skip = (current_page - 1) * 10
-    posts = Post.query.add_descending('createdAt').equal_to('trashed', False).skip(skip).limit(11).find()
     if current_page > 1:
         has_prev = True
     if len(posts) == 11:
         has_next = True
-    if len(posts) == 0:
-        posts = None
     return render_template("post_list.html", posts=posts, has_prev=has_prev, has_next=has_next, current_page=current_page)
+
+
+@app.route("/tags/<string:tag_name>")
+def post_list_with_tag(tag_name):
+    tag = get_tag_by_name(tag_name, auto_create=False)
+    if not tag:
+        abort(404)
+    current_page = request.args.get('page')
+    current_page = 1 if not current_page else int(current_page)
+    posts = Post.query.add_descending('createdAt').equal_to('trashed', False).limit(11).skip((current_page - 1) * 10).find()
+    has_prev = has_next = False
+    if current_page > 1:
+        has_prev = True
+    if len(posts) == 11:
+        has_next = True
+    return render_template("post_list.html", posts=posts, has_prev=has_prev, has_next=has_next, current_page=current_page, tag=tag)
+
 
 
 @app.route("/posts/<string:post_id>")

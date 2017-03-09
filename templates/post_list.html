@@ -1,9 +1,13 @@
 {% extends "layout/base.html" %}
-{% block title %}All Posts{% endblock %}
+{% block title %}{% if tag %}Tags/{{ tag.get('name') }}{% else %}All Posts{% endif %}{% endblock %}
 {% block content %}
 <header>
+{% if not tag %}
     <h1>Cuneiform</h1>
     <p>A tiny blog runs on <a href="https://leancloud.cn/">LeanCloud</a>.</p>
+{% else %}
+    <h1>Tags/{{ tag.get('name') }}</h1>
+{% endif %}
 </header>
 <section class="list">
     {% if not posts %}
