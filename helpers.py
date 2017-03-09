@@ -68,7 +68,7 @@ def get_tags_by_post(post):
 def map_tags_to_post(tags, post):
     for tag in tags:
         tag_post_map = TagPostMap()
-        tag_post_map.set({'tag': tag, 'post': post})
+        tag_post_map.set({'tag': tag, 'post': post, 'trashed': False})
         tag_post_map.save()
 
 

@@ -27,9 +27,12 @@
         {{ post.get('marked_content')|safe }}
     </div>
     <footer>
-        <p>
-            {% if post.get('is_updated') %}Updated At {{ post.get('updatedAt').strftime('%Y-%m-%d %H:%M:%S') }}{% endif %}
-        </p>
+    {% if tags != [] %}
+        <p>Tags: {% for tag in tags %}{{ tag.get('name') }}{% if tag != tags[-1] %}, {% endif %}{% endfor %}</p>
+    {% endif %}
+    {% if post.get('is_updated') %}
+        <p>Updated At {{ post.get('updatedAt').strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    {% endif %}
     </footer>
 </article>
 {% endblock %}

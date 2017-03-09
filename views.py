@@ -54,12 +54,13 @@ def post_list():
 def show_post(post_id):
     try:
         post = Post.query.get(post_id)
+        tags = get_tags_by_post(post)
     except LeanCloudError as e:
         if e.code == 101:
             abort(404)
         else:
             raise e
-    return render_template("post.html", post=post)
+    return render_template("post.html", post=post, tags=tags)
 
 
 @app.route("/login")
