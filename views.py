@@ -3,7 +3,7 @@ from leancloud import LeanCloudError
 
 from app import app
 from helpers import allowed_file, protected, markdown
-from helpers import split_tag_names, get_tag_names_from_map_list, get_tag_by_name, set_tag_by_name, map_tags_to_post
+from helpers import split_tag_names, get_tag_by_name, get_tags_by_post, map_tags_to_post, remove_tag_from_post
 from models import Post, Author, Attachment
 
 
@@ -103,7 +103,7 @@ def create_post():
 
     tag_names = request.form.get('tags').lower().strip()
     if tag_names != '':
-        tags = [get_tag_by_name(x) if get_tag_by_name(x) is not None else set_tag_by_name(x) for x in split_tag_names(tag_names)]
+        tags = [get_tag_by_name(x) for x in split_tag_names(tag_names)]
         map_tags_to_post(tags, post)
 
     return redirect(url_for('show_post', post_id=post.id))
@@ -126,7 +126,7 @@ def update_post(post_id):
         'content': request.form.get('content'),
         'marked_content': markdown(request.form.get('content'))
     }
-    post=Post.create_without_data(post_id)
+    post = Post.create_without_data(post_id)
     post.set(post_data)
 
     upload_image = request.files['featured_image']
@@ -134,6 +134,13 @@ def update_post(post_id):
     if upload_image.filename != '' and allowed_file(upload_image.filename):
         f = Attachment(upload_image.filename, data=upload_image.stream)
         post.set('featured_image', f)
+
+    tag_names = request.form.get('tags').lower().strip()
+    if tag_names != '':
+        new_tags = [get_tag_by_name(x) for x in split_tag_names(tag_names)]
+        old_tags = get_tags_by_post(post)
+        if new_tags != old_tags:
+
 
     post.save()
 

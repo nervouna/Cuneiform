@@ -1,10 +1,13 @@
 import re
 from functools import wraps
+
 from flask import abort
 from markdown import markdown as m
 from leancloud import LeanCloudError
 
-from models import Author, Tag, TagPostMap
+from models import Author
+from models import Tag
+from models import TagPostMap
 
 
 def protected(func):
@@ -40,31 +43,37 @@ def split_tag_names(tag_name_string):
     return tag_names
 
 
-def get_tag_names_from_map_list(tag_post_maps):
-    tag_names = [x.get('tag').get('name') for x in tag_post_maps]
-    return tag_names
-
-
 def get_tag_by_name(tag_name):
     try:
         tag = Tag.query.equal_to('name', tag_name).first()
     except LeanCloudError as e:
         if e.code == 101:
-            tag = None
+            tag = Tag()
+            tag.set('name', tag_name)
+            tag.save()
         else:
             raise e
     return tag
 
 
-def set_tag_by_name(tag_name):
-    tag = Tag()
-    tag.set('name', tag_name)
-    tag.save()
-    return tag
+def get_tags_by_post(post):
+    tag_post_maps = TagPostMap.query.equal_to('post', post).equal_to('trashed', False).include('tag').find()
+    if tag_post_maps != []:
+        tags = [x.get('tag') for x in tag_post_maps]
+    else:
+        tags = []
+    return tags
 
 
 def map_tags_to_post(tags, post):
     for tag in tags:
         tag_post_map = TagPostMap()
         tag_post_map.set({'tag': tag, 'post': post})
+        tag_post_map.save()
+
+
+def remove_tag_from_post(tag, post):
+    tag_post_maps = TagPostMap.query.equal_to('tag', tag).equal_to('post', post).equal_to('trashed', False).find()
+    for tag_post_map in tag_post_maps:
+        tag_post_map.set('trashed', True)
         tag_post_map.save()
