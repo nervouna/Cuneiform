@@ -10,6 +10,7 @@ from app import app
 from helpers import allowed_file
 from helpers import protected
 from helpers import markdown
+from helpers import markup
 from helpers import split_tag_names
 from helpers import get_tag_by_name
 from helpers import get_tags_by_post
@@ -76,6 +77,7 @@ def show_post(post_id):
             abort(404)
         else:
             raise e
+    post = markup(post)
     return render_template("post.html", post=post, tags=tags)
 
 

@@ -24,7 +24,7 @@
     </header>
     {% endif %}
 	<div class="post-content">
-        {{ post.get('marked_content')|safe }}
+        {{ post.get('marked_content') }}
     </div>
     <footer>
     {% if post.get('is_updated') %}
