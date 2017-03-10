@@ -4,7 +4,7 @@ import os
 
 import leancloud
 
-from app import app
+from cuneiform import app
 from cloud import engine
 
 
@@ -17,7 +17,8 @@ FLASK_SECRET_KEY = bytes(os.environ["FLASK_SECRET_KEY"], "utf-8")
 leancloud.init(APP_ID, app_key=APP_KEY, master_key=MASTER_KEY)
 leancloud.use_master_key(False)
 
-application = leancloud.engine.CookieSessionMiddleware(engine, secret=FLASK_SECRET_KEY)
+# application = leancloud.engine.CookieSessionMiddleware(engine, secret=FLASK_SECRET_KEY)
+application = app
 
 
 if __name__ == "__main__":

@@ -11,10 +11,10 @@
     <ul>
         <li><a href="{{ url_for('post_list') }}">All Posts</a></li>
         {% if not g.user.is_authenticated %}
-        <li><a href="{{ url_for('login') }}">Login</a></li>
+        <li><a href="{{ url_for('admin.login') }}">Login</a></li>
         {% else %}
-        <li><a href="{{ url_for('create_post_form') }}">New Post</a></li>
-        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        <li><a href="{{ url_for('admin.create_post_form') }}">New Post</a></li>
+        <li><a href="{{ url_for('admin.logout') }}">Logout</a></li>
         {% endif %}
     </ul>
 </nav>

@@ -1,4 +1,6 @@
-from leancloud import Object, File, User
+from leancloud import Object
+from leancloud import User
+from leancloud import File
 
 
 class Post(Object):

@@ -1,92 +1,33 @@
+from flask import Blueprint
 from flask import render_template
 from flask import request
 from flask import url_for
 from flask import redirect
 from flask import g
 from flask import abort
-from leancloud import LeanCloudError
 
-from app import app
-from helpers import allowed_file
-from helpers import protected
-from helpers import markdown
-from helpers import markup
-from helpers import split_tag_names
-from helpers import get_tag_by_name
-from helpers import get_tags_by_post
-from helpers import map_tags_to_post
-from helpers import remove_all_tags_from_post
-from models import Post
-from models import Author
-from models import Attachment
+from cuneiform.models import Post
+from cuneiform.models import Author
+from cuneiform.models import Attachment
+from cuneiform.manager.helper import allowed_file
+from cuneiform.manager.helper import protected
+from cuneiform.manager.post import markdown
+from cuneiform.manager.post import markup
+from cuneiform.manager.tag import split_tag_names
+from cuneiform.manager.tag import get_tag_by_name
+from cuneiform.manager.tag import get_tags_by_post
+from cuneiform.manager.tag import map_tags_to_post
+from cuneiform.manager.tag import remove_all_tags_from_post
 
 
-@app.before_request
-def before_request():
-    g.user = Author.get_current()
+admin = Blueprint('admin', __name__, template_folder="templates")
 
-
-@app.errorhandler(400)
-@app.errorhandler(401)
-@app.errorhandler(403)
-@app.errorhandler(404)
-def error_page(e):
-    return render_template("error.html", error=e), e.code
-
-
-@app.route("/")
-@app.route("/posts/")
-def post_list():
-    current_page = request.args.get('page')
-    current_page = 1 if not current_page else int(current_page)
-    posts = Post.query.add_descending('createdAt').equal_to('trashed', False).limit(11).skip((current_page - 1) * 10).find()
-    has_prev = has_next = False
-    if current_page > 1:
-        has_prev = True
-    if len(posts) == 11:
-        has_next = True
-        posts = posts[:-1]
-    return render_template("post_list.html", posts=posts, has_prev=has_prev, has_next=has_next, current_page=current_page)
-
-
-@app.route("/tags/<string:tag_name>")
-def post_list_with_tag(tag_name):
-    tag = get_tag_by_name(tag_name, auto_create=False)
-    if not tag:
-        abort(404)
-    current_page = request.args.get('page')
-    current_page = 1 if not current_page else int(current_page)
-    posts = Post.query.add_descending('createdAt').equal_to('trashed', False).limit(11).skip((current_page - 1) * 10).find()
-    has_prev = has_next = False
-    if current_page > 1:
-        has_prev = True
-    if len(posts) == 11:
-        has_next = True
-        posts = posts[:-1]
-    return render_template("post_list.html", posts=posts, has_prev=has_prev, has_next=has_next, current_page=current_page, tag=tag)
-
-
-
-@app.route("/posts/<string:post_id>")
-def show_post(post_id):
-    try:
-        post = Post.query.get(post_id)
-        tags = get_tags_by_post(post)
-    except LeanCloudError as e:
-        if e.code == 101:
-            abort(404)
-        else:
-            raise e
-    post = markup(post)
-    return render_template("post.html", post=post, tags=tags)
-
-
-@app.route("/login")
+@admin.route("/login")
 def login_form():
     return render_template("user_login.html")
 
 
-@app.route("/login", methods=["POST"])
+@admin.route("/login", methods=["POST"])
 def login():
     credentials = ['username', 'password']
     user_data = {x:request.form[x] for x in credentials}
@@ -98,7 +39,7 @@ def login():
     return redirect(url_for('post_list'))
 
 
-@app.route("/logout")
+@admin.route("/logout")
 @protected
 def logout():
     current_user = Author.get_current()
@@ -107,13 +48,13 @@ def logout():
     return redirect(url_for('post_list'))
 
 
-@app.route("/posts/new")
+@admin.route("/posts/new")
 @protected
 def create_post_form():
     return render_template("create_post_form.html")
 
 
-@app.route("/posts/new", methods=["POST"])
+@admin.route("/posts/new", methods=["POST"])
 @protected
 def create_post():
 
@@ -140,7 +81,7 @@ def create_post():
     return redirect(url_for('show_post', post_id=post.id))
 
 
-@app.route("/posts/<string:post_id>/edit")
+@admin.route("/posts/<string:post_id>/edit")
 @protected
 def update_post_form(post_id):
     post = Post.create_without_data(post_id)
@@ -149,7 +90,7 @@ def update_post_form(post_id):
     return render_template("update_post_form.html", post=post, tag_names=tag_names)
 
 
-@app.route("/posts/<string:post_id>/edit", methods=["POST"])
+@admin.route("/posts/<string:post_id>/edit", methods=["POST"])
 @protected
 def update_post(post_id):
 
@@ -180,7 +121,7 @@ def update_post(post_id):
     return redirect(url_for('show_post', post_id=post.id))
 
 
-@app.route("/posts/<string:post_id>/delete")
+@admin.route("/posts/<string:post_id>/delete")
 @protected
 def delete_post(post_id):
     post = Post.create_without_data(post_id)

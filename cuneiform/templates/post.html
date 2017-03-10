@@ -8,7 +8,7 @@
         <p class="post-create-time">
             Posted on {{ post.get('createdAt').strftime('%Y-%m-%d %H:%M:%S') }}{% if tags %}, taged with {% for tag in tags %} <a href="{{ url_for('post_list_with_tag', tag_name=tag.get('name')) }}">{{ tag.get('name') }}</a> {% endfor %} {% endif %}
             {% if g.user %}
-            | <a href="{{ url_for('update_post_form', post_id=post.id) }}">Edit</a> | <a href="{{ url_for('delete_post', post_id=post.id) }}">Delete</a>
+            | <a href="{{ url_for('admin.update_post_form', post_id=post.id) }}">Edit</a> | <a href="{{ url_for('admin.delete_post', post_id=post.id) }}">Delete</a>
             {% endif %}
         </p>
     </header>
@@ -18,7 +18,7 @@
         <p class="post-create-time">
             Posted on {{ post.get('createdAt').strftime('%Y-%m-%d %H:%M:%S') }}
             {% if g.user %}
-            | <a href="{{ url_for('update_post_form', post_id=post.id) }}">Edit</a> | <a href="{{ url_for('delete_post', post_id=post.id) }}">Delete</a>
+            | <a href="{{ url_for('admin.update_post_form', post_id=post.id) }}">Edit</a> | <a href="{{ url_for('admin.delete_post', post_id=post.id) }}">Delete</a>
             {% endif %}
         </p>
     </header>

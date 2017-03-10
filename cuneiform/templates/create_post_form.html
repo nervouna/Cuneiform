@@ -1,7 +1,7 @@
 {% extends "layout/base.html" %}
 {% block title %}Post Editor{% endblock %}
 {% block content %}
-<form class="post" action="{{ url_for('create_post') }}", method="post" enctype="multipart/form-data">
+<form class="post" action="{{ url_for('admin.create_post') }}", method="post" enctype="multipart/form-data">
     <input class="post-title" type="text" name="title" placeholder="Post Title">
     <input class="post-tag-names" type="text", name="tags" placeholder="Tags" value="{{ tag_names }}">
     <div class="uploader-container">

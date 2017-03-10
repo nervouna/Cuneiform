@@ -1,7 +1,7 @@
 {% extends "layout/base.html" %}
 {% block title %}Editing: {{ post.get('title') }}{% endblock %}
 {% block content %}
-<form class="post" action="{{ url_for('update_post', post_id=post.id) }}", method="post" enctype="multipart/form-data">
+<form class="post" action="{{ url_for('admin.update_post', post_id=post.id) }}", method="post" enctype="multipart/form-data">
     <input class="post-title" type="text" name="title" placeholder="Post Title" value="{{ post.get('title') }}">
     <input class="post-tag-names" type="text", name="tags" placeholder="Tags" value="{{ tag_names }}">
     <div class="uploader-container">

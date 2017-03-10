@@ -3,9 +3,9 @@ from datetime import timedelta
 
 from leancloud import Engine
 
-from models import Post
-from models import TagPostMap
-from app import app
+from cuneiform import app
+from cuneiform.models import Post
+from cuneiform.models import TagPostMap
 
 
 engine = Engine(app)

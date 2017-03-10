@@ -13,9 +13,9 @@
     {% elif error.code == 403 %}
         You don't have the permission to visit this page.
     {% elif error.code == 401 %}
-        Please <a href="{{ url_for('login') }}">login</a> before visiting this page.
+        Please <a href="{{ url_for('admin.login') }}">login</a> before visiting this page.
     {% elif error.code == 400 %}
-        You have made a request that the server do not understand.
+        You have made a request that the server does not understand.
     {% endif %}
     </p>
     </section>

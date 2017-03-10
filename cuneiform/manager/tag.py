@@ -1,42 +1,9 @@
 import re
-from functools import wraps
 
-from flask import abort
-from flask import Markup
-from markdown import markdown as m
 from leancloud import LeanCloudError
 
-from models import Author
-from models import Tag
-from models import TagPostMap
-
-
-def protected(func):
-    @wraps(func)
-    def secret_view(*args, **kwargs):
-        current_user = Author.get_current()
-        if not current_user:
-            abort(401)
-        elif not current_user.is_authenticated():
-            abort(403)
-        else:
-            return func(*args, **kwargs)
-    return secret_view
-
-
-def allowed_file(filename):
-    ext = filename.rsplit('.', 1)[-1]
-    allowed_ext = ['jpg', 'jpeg', 'png', 'svg', 'gif', 'bmp']
-    return ext.lower() in allowed_ext
-
-
-def markdown(text):
-    return m(text, extensions=['fenced_code'])
-
-
-def markup(post):
-    post.set('marked_content', Markup(post.get('marked_content')))
-    return post
+from cuneiform.models import Tag
+from cuneiform.models import TagPostMap
 
 
 def split_tag_names(tag_name_string):
