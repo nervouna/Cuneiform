@@ -1,9 +1,23 @@
-from flask import render_template, request, url_for, redirect, g, abort
+from flask import render_template
+from flask import request
+from flask import url_for
+from flask import redirect
+from flask import g
+from flask import abort
 from leancloud import LeanCloudError
 
 from app import app
-from helpers import allowed_file, protected, markdown
-from models import Post, Author, Attachment
+from helpers import allowed_file
+from helpers import protected
+from helpers import markdown
+from helpers import split_tag_names
+from helpers import get_tag_by_name
+from helpers import get_tags_by_post
+from helpers import map_tags_to_post
+from helpers import remove_all_tags_from_post
+from models import Post
+from models import Author
+from models import Attachment
 
 
 @app.before_request
@@ -24,29 +38,45 @@ def error_page(e):
 def post_list():
     current_page = request.args.get('page')
     current_page = 1 if not current_page else int(current_page)
+    posts = Post.query.add_descending('createdAt').equal_to('trashed', False).limit(11).skip((current_page - 1) * 10).find()
     has_prev = has_next = False
-    skip = (current_page - 1) * 10
-    posts = Post.query.add_descending('createdAt').equal_to('trashed', False).skip(skip).limit(11).find()
     if current_page > 1:
         has_prev = True
     if len(posts) == 11:
         has_next = True
         posts = posts[:-1]
-    if len(posts) == 0:
-        posts = None
     return render_template("post_list.html", posts=posts, has_prev=has_prev, has_next=has_next, current_page=current_page)
+
+
+@app.route("/tags/<string:tag_name>")
+def post_list_with_tag(tag_name):
+    tag = get_tag_by_name(tag_name, auto_create=False)
+    if not tag:
+        abort(404)
+    current_page = request.args.get('page')
+    current_page = 1 if not current_page else int(current_page)
+    posts = Post.query.add_descending('createdAt').equal_to('trashed', False).limit(11).skip((current_page - 1) * 10).find()
+    has_prev = has_next = False
+    if current_page > 1:
+        has_prev = True
+    if len(posts) == 11:
+        has_next = True
+        posts = posts[:-1]
+    return render_template("post_list.html", posts=posts, has_prev=has_prev, has_next=has_next, current_page=current_page, tag=tag)
+
 
 
 @app.route("/posts/<string:post_id>")
 def show_post(post_id):
     try:
         post = Post.query.get(post_id)
+        tags = get_tags_by_post(post)
     except LeanCloudError as e:
         if e.code == 101:
             abort(404)
         else:
             raise e
-    return render_template("post.html", post=post)
+    return render_template("post.html", post=post, tags=tags)
 
 
 @app.route("/login")
@@ -90,15 +120,20 @@ def create_post():
         'content': request.form.get('content'),
         'marked_content': markdown(request.form.get('content'))
     }
+
     post = Post()
     post.set(post_data)
 
-    upload_image = request.files['featured_image']
+    upload_image = request.files.get('featured_image')
     if upload_image.filename != '' and allowed_file(upload_image.filename):
         f = Attachment(upload_image.filename, data=upload_image.stream)
         post.set('featured_image', f)
 
     post.save()
+
+    tag_names = request.form.get('tags').lower().strip()
+    tags = [get_tag_by_name(x) for x in split_tag_names(tag_names)]
+    map_tags_to_post(tags, post)
 
     return redirect(url_for('show_post', post_id=post.id))
 
@@ -106,9 +141,10 @@ def create_post():
 @app.route("/posts/<string:post_id>/edit")
 @protected
 def update_post_form(post_id):
-    post=Post.create_without_data(post_id)
+    post = Post.create_without_data(post_id)
+    tag_names = ','.join([x.get('name') for x in get_tags_by_post(post)])
     post.fetch()
-    return render_template("update_post_form.html", post=post)
+    return render_template("update_post_form.html", post=post, tag_names=tag_names)
 
 
 @app.route("/posts/<string:post_id>/edit", methods=["POST"])
@@ -120,7 +156,7 @@ def update_post(post_id):
         'content': request.form.get('content'),
         'marked_content': markdown(request.form.get('content'))
     }
-    post=Post.create_without_data(post_id)
+    post = Post.create_without_data(post_id)
     post.set(post_data)
 
     upload_image = request.files['featured_image']
@@ -128,6 +164,14 @@ def update_post(post_id):
     if upload_image.filename != '' and allowed_file(upload_image.filename):
         f = Attachment(upload_image.filename, data=upload_image.stream)
         post.set('featured_image', f)
+
+    old_tag_names = [x.get('name') for x in get_tags_by_post(post)]
+    new_tag_names = split_tag_names(request.form.get('tags').lower().strip())
+    if len(new_tag_names) != len(old_tag_names):
+        if len(old_tag_names) > 0:
+            remove_all_tags_from_post(post)
+        if len(new_tag_names) > 0:
+            map_tags_to_post([get_tag_by_name(x) for x in new_tag_names], post)
 
     post.save()
 

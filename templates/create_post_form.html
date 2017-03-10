@@ -3,6 +3,7 @@
 {% block content %}
 <form class="post" action="{{ url_for('create_post') }}", method="post" enctype="multipart/form-data">
     <input class="post-title" type="text" name="title" placeholder="Post Title">
+    <input class="post-tag-names" type="text", name="tags" placeholder="Tags" value="{{ tag_names }}">
     <div class="uploader-container">
         <p class="uploader-placeholder">Click to upload a header image (if you want to).</p>
         <input class="uploader" type="file" name="featured_image">

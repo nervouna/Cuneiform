@@ -12,3 +12,10 @@ class Author(User):
 class Attachment(File):
     pass
 
+
+class Tag(Object):
+	pass
+
+
+class TagPostMap(Object):
+	pass
