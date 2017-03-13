@@ -22,3 +22,12 @@ def allowed_file(filename):
     ext = filename.rsplit('.', 1)[-1]
     allowed_ext = ['jpg', 'jpeg', 'png', 'svg', 'gif', 'bmp']
     return ext.lower() in allowed_ext
+
+
+def get_current_page(ctx):
+    _page = ctx.args.get('page')
+    return 1 if not _page else int(_page)
+
+
+def paginate(query, current_page, limit):
+    return query.add_descending('createdAt').limit(limit + 1).skip((current_page - 1) * limit)
