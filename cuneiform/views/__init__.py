@@ -9,6 +9,7 @@ from leancloud import LeanCloudError
 from cuneiform import app
 from cuneiform.models import Author
 from cuneiform.models import Post
+from cuneiform.models import TagPostMap
 from cuneiform.manager.post import markup
 from cuneiform.manager.tag import get_tag_by_name
 from cuneiform.manager.tag import get_tags_by_post
@@ -33,9 +34,11 @@ def error_page(e):
 @app.route("/")
 @app.route("/posts/")
 def post_list():
-    current_page = request.args.get('page')
-    current_page = 1 if not current_page else int(current_page)
-    posts = Post.query.add_descending('createdAt').equal_to('trashed', False).limit(11).skip((current_page - 1) * 10).find()
+    _page = request.args.get('page')
+    current_page = 1 if not _page else int(_page)
+    query = Post.equal_to('trashed', False)
+    query.add_descending('createdAt').limit(11).skip((current_page - 1) * 10)
+    posts = query.find()
     has_prev = has_next = False
     if current_page > 1:
         has_prev = True
@@ -50,9 +53,11 @@ def post_list_with_tag(tag_name):
     tag = get_tag_by_name(tag_name, auto_create=False)
     if not tag:
         abort(404)
-    current_page = request.args.get('page')
-    current_page = 1 if not current_page else int(current_page)
-    posts = Post.query.add_descending('createdAt').equal_to('trashed', False).limit(11).skip((current_page - 1) * 10).find()
+    _page = request.args.get('page')
+    current_page = 1 if not _page else int(_page)
+    query = TagPostMap.query.equal_to('trashed', False).equal_to('tag', tag).include('post')
+    query.add_descending('createdAt').limit(11).skip((current_page - 1) * 10)
+    posts = [x.get('post') for x in query.find()]
     has_prev = has_next = False
     if current_page > 1:
         has_prev = True
