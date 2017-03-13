@@ -2,8 +2,9 @@ from flask import Markup
 from markdown import markdown as m
 
 
-def markdown(text):
-    return m(text, extensions=['fenced_code'])
+def markdown(post):
+    post.set('marked_content', m(post.get('content'), extensions=['fenced_code']))
+    return post
 
 
 def markup(post):

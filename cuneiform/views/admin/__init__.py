@@ -12,7 +12,6 @@ from cuneiform.models import Attachment
 from cuneiform.manager.helper import allowed_file
 from cuneiform.manager.helper import protected
 from cuneiform.manager.post import markdown
-from cuneiform.manager.post import markup
 from cuneiform.manager.tag import split_tag_names
 from cuneiform.manager.tag import get_tag_by_name
 from cuneiform.manager.tag import get_tags_by_post
@@ -61,11 +60,10 @@ def create_post():
     post_data = {
         'title': request.form.get('title'),
         'content': request.form.get('content'),
-        'marked_content': markdown(request.form.get('content'))
     }
-
     post = Post()
     post.set(post_data)
+    post = markdown(post)
 
     upload_image = request.files.get('featured_image')
     if upload_image.filename != '' and allowed_file(upload_image.filename):
@@ -97,10 +95,10 @@ def update_post(post_id):
     post_data = {
         'title': request.form.get('title'),
         'content': request.form.get('content'),
-        'marked_content': markdown(request.form.get('content'))
     }
     post = Post.create_without_data(post_id)
     post.set(post_data)
+    post = markdown(post)
 
     upload_image = request.files['featured_image']
 
