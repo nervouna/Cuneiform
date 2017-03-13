@@ -22,3 +22,7 @@ def allowed_file(filename):
     ext = filename.rsplit('.', 1)[-1]
     allowed_ext = ['jpg', 'jpeg', 'png', 'svg', 'gif', 'bmp']
     return ext.lower() in allowed_ext
+
+
+def paginate(query, current_page, limit):
+    return query.add_descending('createdAt').limit(limit + 1).skip((current_page - 1) * limit)

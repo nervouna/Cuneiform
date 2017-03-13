@@ -10,6 +10,7 @@ from cuneiform import app
 from cuneiform.models import Author
 from cuneiform.models import Post
 from cuneiform.models import TagPostMap
+from cuneiform.manager.helper import paginate
 from cuneiform.manager.post import markup
 from cuneiform.manager.tag import get_tag_by_name
 from cuneiform.manager.tag import get_tags_by_post
@@ -36,8 +37,8 @@ def error_page(e):
 def post_list():
     _page = request.args.get('page')
     current_page = 1 if not _page else int(_page)
-    query = Post.equal_to('trashed', False)
-    query.add_descending('createdAt').limit(11).skip((current_page - 1) * 10)
+    query = Post.query.equal_to('trashed', False)
+    paginate(query, current_page, limit=10)
     posts = query.find()
     has_prev = has_next = False
     if current_page > 1:
@@ -56,7 +57,7 @@ def post_list_with_tag(tag_name):
     _page = request.args.get('page')
     current_page = 1 if not _page else int(_page)
     query = TagPostMap.query.equal_to('trashed', False).equal_to('tag', tag).include('post')
-    query.add_descending('createdAt').limit(11).skip((current_page - 1) * 10)
+    paginate(query, current_page, limit=10)
     posts = [x.get('post') for x in query.find()]
     has_prev = has_next = False
     if current_page > 1:
