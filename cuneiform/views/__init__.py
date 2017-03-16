@@ -29,6 +29,7 @@ def before_request():
 @app.errorhandler(401)
 @app.errorhandler(403)
 @app.errorhandler(404)
+@app.errorhandler(410)
 def error_page(e):
     return render_template("error.html", error=e), e.code
 
@@ -72,6 +73,8 @@ def post_list_with_tag(tag_name):
 def show_post(post_id):
     try:
         post = Post.query.get(post_id)
+        if post.get('trashed'):
+            abort(410)
         tags = get_tags_by_post(post)
     except LeanCloudError as e:
         if e.code == 101:

@@ -8,7 +8,9 @@
     </header>
     <section class="content">
     <p>
-    {% if error.code == 404 %}
+    {% if error.code == 410 %}
+        You've found a grave stone. Please leave.
+    {% elif error.code == 404 %}
         This is not the page you are looking for.
     {% elif error.code == 403 %}
         You don't have the permission to visit this page.
