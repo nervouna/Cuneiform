@@ -1,8 +1,13 @@
 from functools import wraps
+import sys
+import re
+import unicodedata
+import time
 
 from flask import abort
 from flask import request
 from flask import url_for
+import pinyin
 
 from cuneiform.models import Author
 
@@ -37,3 +42,16 @@ def paginate(query, current_page, limit):
 
 def redirect_url(default='index'):
     return request.args.get('next') or request.referrer or url_for('default')
+
+
+def pinyinify(string):
+    # TODO: Use static file instead of constructing table in real time
+    table = dict()
+    for i in range(sys.maxunicode):
+        if re.match('P|S|Z|C', unicodedata.category(chr(i))) is not None:
+            table[i] = '-'
+    string = string.translate(table)
+    for char in [x for x in string if unicodedata.name(x).startswith('CJK')]:
+        string = string.replace(char, pinyin.get(char, format='strip') + '-')
+    string = re.sub('\-+', '-', string)
+    return pinyin.get(string, delimiter='', format='strip').lower()
