@@ -1,7 +1,5 @@
 # Cuneiform
 
-[ TOC ]
-
 ## 环境与依赖
 
 Cuneiform 运行在 Python 3 上，依赖 [flask][1]、[Markdown][2] 以及 [LeanCloud Python SDK][3]。
