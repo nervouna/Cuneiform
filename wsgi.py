@@ -23,4 +23,4 @@ application = leancloud.engine.CookieSessionMiddleware(engine, secret=FLASK_SECR
 if __name__ == "__main__":
     from werkzeug.serving import run_simple
     application.debug = True
-    run_simple("0.0.0.0", 3000, application, use_reloader=True, use_debugger=True, extra_files=extra_files)
+    run_simple("0.0.0.0", 3000, application, use_reloader=True, use_debugger=True)
