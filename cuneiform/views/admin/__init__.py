@@ -12,6 +12,7 @@ from cuneiform.models import Attachment
 from cuneiform.manager.helper import allowed_file
 from cuneiform.manager.helper import protected
 from cuneiform.manager.helper import redirect_url
+from cuneiform.manager.helper import pinyinify
 from cuneiform.manager.post import markdown
 from cuneiform.manager.tag import split_tag_names
 from cuneiform.manager.tag import get_tag_by_name
@@ -61,6 +62,7 @@ def create_post():
     post_data = {
         'title': request.form.get('title'),
         'content': request.form.get('content'),
+        'slug': pinyinify(request.form.get('title')),
     }
     post = Post()
     post.set(post_data)
@@ -96,6 +98,7 @@ def update_post(post_id):
     post_data = {
         'title': request.form.get('title'),
         'content': request.form.get('content'),
+        'slug': pinyinify(request.form.get('title')),
     }
     post = Post.create_without_data(post_id)
     post.set(post_data)
