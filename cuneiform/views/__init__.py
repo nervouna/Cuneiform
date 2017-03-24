@@ -40,7 +40,11 @@ def post_list():
     current_page = get_current_page(request)
     query = Post.query.equal_to('trashed', False)
     paginate(query, current_page, limit=10)
-    posts = query.find()
+    try:
+        posts = query.find()
+    except LeanCloudError as e:
+        if e.code == 101:
+            posts=[]
     has_prev = has_next = False
     if current_page > 1:
         has_prev = True
@@ -58,7 +62,11 @@ def post_list_with_tag(tag_name):
     current_page = get_current_page(request)
     query = TagPostMap.query.equal_to('trashed', False).equal_to('tag', tag).include('post')
     paginate(query, current_page, limit=10)
-    posts = [x.get('post') for x in query.find()]
+    try:
+        posts = [x.get('post') for x in query.find()]
+    except LeanCloudError as e:
+        if e.code == 101:
+            posts=[]
     has_prev = has_next = False
     if current_page > 1:
         has_prev = True
