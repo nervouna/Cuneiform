@@ -2,13 +2,14 @@ from datetime import datetime
 from datetime import timedelta
 
 from leancloud import Engine
+from leancloud import HttpsRedirectMiddleware
 
 from cuneiform import app
 from cuneiform.models import Post
 from cuneiform.models import TagPostMap
 
 
-engine = Engine(app)
+engine = Engine(HttpsRedirectMiddleware(app))
 
 
 @engine.after_update('Post')
