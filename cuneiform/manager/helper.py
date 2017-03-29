@@ -53,5 +53,5 @@ def pinyinify(string):
     string = string.translate(table)
     for char in [x for x in string if unicodedata.name(x).startswith('CJK')]:
         string = string.replace(char, pinyin.get(char, format='strip') + '-')
-    string = re.sub('\-+', '-', string)
+    string = re.sub('\-+', '-', string).strip('-')
     return pinyin.get(string, delimiter='', format='strip').lower()
