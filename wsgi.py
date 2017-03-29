@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 import os
 
 import leancloud
 
-from cuneiform import app
 from cloud import engine
 
 
